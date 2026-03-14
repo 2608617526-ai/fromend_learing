@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>探寻广州之春 · 前沿视觉漫游</title>
+    <!-- Font Awesome 6 图标库 (炫技基础) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts 引入可变字体与优雅字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* ---------- 全局重置与自定义属性 ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --spring-green: #8fc1b5;
+            --kapok-red: #f08080;
+            --rain-blue: #a3d8f0;
+            --warm-yellow: #f9d56e;
+            --glass-bg: rgba(255, 255, 255, 0.2);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1);
+            --blur-amount: 12px;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --scroll-progress: 0; /* 供JS使用 */
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: #1e2b2f;
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-color: #021013; /* 底色衬托粒子 */
+        }
+
+        /* ---------- 炫技1：自定义滚动条 (WebKit) ---------- */
+        ::-webkit-scrollbar {
+            width: 12px;
+            background: linear-gradient(180deg, #1b3b3f 0%, #2b5e5e 100%);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(4px);
+            border-radius: 20px;
+            border: 2px solid rgba(255, 215, 140, 0.6);
+            box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.5);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 235, 150, 0.8);
+        }
+
+        /* ---------- 炫技2：固定画布粒子层 (canvas动态背景) ---------- */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none; /* 保证鼠标穿透，让内容可交互 */
+            display: block;
+        }
+
+        /* ---------- 阅读进度条 (炫技3) ---------- */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--kapok-red), var(--warm-yellow), var(--spring-green));
+            width: calc(var(--scroll-progress) * 1%);
+            z-index: 9999;
+            box-shadow: 0 0 15px #ffb347;
+            transition: width 0.1s ease;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* ---------- 主容器 ---------- */
+        main {
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(0); /* 无整体模糊，保留清晰边缘 */
+        }
+
+        /* 每个版块通用的玻璃效果 */
+        .section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 2rem;
+            scroll-snap-align: start;
+            border-bottom: 1px solid rgba(255,255,240,0.2);
+        }
+
+        /* 玻璃卡片 */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-amount)) brightness(1.1);
+            -webkit-backdrop-filter: blur(var(--blur-amount)) brightness(1.1);
+            border: 1px solid var(--glass-border);
+            border-radius: 2.5rem 1rem 2.5rem 1rem; /* 非对称圆角 */
+            box-shadow: var(--shadow-heavy), 0 0 0 2px rgba(255,255,200,0.2) inset;
+            padding: 2rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .glass-card:hover {
+            box-shadow: 0 30px 50px rgba(0,0,0,0.3), 0 0 0 4px #fff8e7 inset;
+            transform: translateY(-10px) scale(1.02);
+        }
+
+        /* 标题炫技：渐变+裁剪+阴影 */
+        .glitch-title {
+            font-family: var(--font-display);
+            font-weight: 900;
+            font-size: clamp(3rem, 15vw, 6rem);
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #ffe6b0, #ffb7b0, #b0e0ff, #b0ffd0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            letter-spacing: 0.1em;
+            text-shadow: 4px 4px 0 rgba(255, 160, 160, 0.3), 8px 8px 0 rgba(160, 240, 200, 0.2);
+            animation: glitch-shake 3s infinite alternate;
+        }
+
+        @keyframes glitch-shake {
+            0% { transform: skew(0deg, 0deg); }
+            95% { transform: skew(0deg, 0deg); }
+            96% { transform: skew(5deg, 2deg) scale(1.01); }
+            97% { transform: skew(-3deg, -1deg) scale(0.99); }
+            98% { transform: skew(2deg, 0deg); }
+            100% { transform: skew(0deg, 0deg); }
+        }
+
+        /* 炫技4：打字机效果 (纯CSS + 动画) */
+        .typewriter {
+            width: fit-content;
+            margin: 2rem auto;
+            border-right: 0.15em solid #f9d56e;
+            font-size: 1.8rem;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: typing 4s steps(20, end) infinite alternate, blink-caret 0.75s step-end infinite;
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(5px);
+            padding: 0.5rem 2rem;
+            border-radius: 4rem;
+            color: #fff5e6;
+            font-weight: 500;
+            letter-spacing: 2px;
+        }
+
+        @keyframes typing {
+            0%, 50% { width: 0; }
+            70%, 100% { width: 19ch; } /* 对应文案长度 */
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: #f9d56e; }
+        }
+
+        /* 炫技5：3D翻转卡片网格 */
+        .flip-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2.5rem;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 3rem;
+        }
+
+        .flip-card {
+            background-color: transparent;
+            aspect-ratio: 3/4;
+            perspective: 2000px;
+            cursor: pointer;
+        }
+
+        .flip-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            transform-style: preserve-3d;
+            border-radius: 2rem;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.4);
+        }
+
+        .flip-card:hover .flip-inner {
+            transform: rotateY(180deg) rotateX(5deg);
+        }
+
+        .flip-front, .flip-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 2rem;
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,200,0.5);
+            color: #1e2b2f;
+        }
+
+        .flip-front {
+            background: linear-gradient(145deg, rgba(255,215,140,0.4), rgba(160,210,180,0.5));
+        }
+
+        .flip-back {
+            background: rgba(20, 50, 40, 0.7);
+            backdrop-filter: blur(20px) brightness(0.9);
+            color: #f0f7e6;
+            transform: rotateY(180deg);
+            font-size: 1rem;
+            border: 2px solid #f9d56e;
+        }
+
+        .flip-front i {
+            font-size: 4rem;
+            color: #b03a2e;
+            text-shadow: 0 0 15px #ffb3a6;
+            margin-bottom: 1rem;
+        }
+
+        /* 炫技6：横向滚动捕捉 + 视差内嵌 */
+        .horizontal-scroll {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 2rem;
+            padding: 2rem 1rem;
+            width: 100%;
+            max-width: 100vw;
+            scrollbar-width: thin;
+            scrollbar-color: #f9d56e #1b3b3f;
+            border-radius: 2rem;
+            background: rgba(0,0,0,0.1);
+            backdrop-filter: blur(6px);
+        }
+
+        .scroll-item {
+            min-width: 280px;
+            height: 360px;
+            scroll-snap-align: center;
+            background: rgba(255,250,210,0.2);
+            backdrop-filter: blur(10px) brightness(1.2);
+            border-radius: 3rem 1rem 3rem 1rem;
+            border: 1px solid rgba(255,255,220,0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 2rem;
+            box-shadow: 0 20px 30px -10px black;
+            transition: transform 0.3s;
+            color: #fff9e6;
+            font-weight: bold;
+            text-shadow: 0 0 10px #333;
+            background-size: cover;
+            background-blend-mode: overlay;
+        }
+
+        .scroll-item:hover {
+            transform: scale(0.98) rotate(1deg);
+        }
+
+        /* 每个item用渐变色模拟图片 */
+        .item1 { background: linear-gradient(135deg, #b03a2e, #d6645a, #f0c45a); }
+        .item2 { background: linear-gradient(135deg, #3f786a, #8fc1b5, #f2e394); }
+        .item3 { background: radial-gradient(circle at top left, #f9d56e, #e8846b); }
+        .item4 { background: conic-gradient(from 90deg at 50% 50%, #a3d8f0, #b4e6c3, #fbe5a2, #a3d8f0); }
+
+        /* 炫技7：3D立方体 (CSS魔法) */
+        .cube-container {
+            width: 200px;
+            height: 200px;
+            margin: 3rem auto;
+            perspective: 1000px;
+        }
+
+        .cube {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotateCube 12s infinite linear;
+        }
+
+        .cube-face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 225, 140, 0.5);
+            backdrop-filter: blur(8px);
+            border: 3px solid #fff2b0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #442211;
+            text-shadow: 0 0 10px white;
+            box-shadow: inset 0 0 30px rgba(255,255,200,0.5);
+        }
+
+        .front  { transform: rotateY(0deg) translateZ(100px); }
+        .back   { transform: rotateY(180deg) translateZ(100px); }
+        .right  { transform: rotateY(90deg) translateZ(100px); }
+        .left   { transform: rotateY(-90deg) translateZ(100px); }
+        .top    { transform: rotateX(90deg) translateZ(100px); }
+        .bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+        @keyframes rotateCube {
+            0% { transform: rotateX(0deg) rotateY(0deg); }
+            25% { transform: rotateX(30deg) rotateY(120deg); }
+            50% { transform: rotateX(0deg) rotateY(240deg); }
+            75% { transform: rotateX(-30deg) rotateY(360deg); }
+            100% { transform: rotateX(0deg) rotateY(360deg); }
+        }
+
+        /* 炫技8：clip-path 花形 & 浮动动画 */
+        .flower-shape {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(45deg, #f08080, #ffb7c5);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: float 4s ease-in-out infinite, hueShift 8s infinite alternate;
+            box-shadow: 0 20px 30px rgba(255, 160, 160, 0.6);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        @keyframes hueShift {
+            0% { filter: hue-rotate(0deg) brightness(1); }
+            100% { filter: hue-rotate(30deg) brightness(1.1); }
+        }
+
+        /* 炫技9：混合模式 & 文字特效 */
+        .blend-text {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(0deg, #4b7a6e, #c97868);
+            mix-blend-mode: overlay;
+            color: white;
+            padding: 0.5rem 2rem;
+            border-radius: 60px;
+            margin: 2rem;
+            pointer-events: none;
+        }
+
+        /* 炫技10：滚动驱动动画 (配合Intersection Observer实现) */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-up.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 其他装饰 */
+        .btn-spring {
+            background: rgba(255,255,240,0.25);
+            backdrop-filter: blur(8px);
+            padding: 1rem 3rem;
+            border-radius: 40px 10px 40px 10px;
+            border: 1px solid #fff9cf;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: 0.3s;
+            cursor: default;
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.3);
+        }
+
+        footer {
+            backdrop-filter: blur(10px);
+            background: rgba(0, 30, 20, 0.3);
+            color: #f0ead0;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        /* 响应式微调 */
+        @media (max-width: 700px) {
+            .glitch-title { font-size: 3rem; }
+            .typewriter { font-size: 1rem; white-space: normal; animation: none; border-right: none; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 炫技3 (进度条) 的容器 -->
+    <div class="progress-bar" id="progressBar" style="--scroll-progress:0"></div>
+
+    <!-- 炫技2：粒子画布 -->
+    <canvas id="particle-canvas"></canvas>
+
+    <main>
+        <!-- 第一部分：首屏震撼 -->
+        <section class="section">
+            <h1 class="glitch-title" data-text="探寻广州之春">探寻广州之春</h1>
+            <div class="typewriter">🌸 木棉 · 暖风 · 珠江韵</div>
+            <div class="btn-spring fade-up"><i class="fas fa-leaf"></i>  scroll to explore  <i class="fas fa-umbrella-beach"></i></div>
+            <div style="margin-top: 8rem; font-size: 2rem; animation: bounce 2s infinite;">
+                <i class="fas fa-chevron-down" style="color: #fff3c9; filter: drop-shadow(0 0 10px gold);"></i>
+            </div>
+        </section>
+
+        <!-- 第二部分：翻转卡片 (炫技5) -->
+        <section class="section">
+            <h2 class="blend-text">· 春日印记 ·</h2>
+            <div class="flip-grid">
+                <div class="flip-card">
+                    <div class="flip-inner">
+                        <div class="flip-front"><i class="fas fa-tree"></i><h3>木棉似火</h3></div>
+                        <div class="flip-back">英雄花开，点亮羊城街巷。</div>
+                    </div>
+                </div>
+                <div class="flip-card">
+                    <div class="flip-inner">
+                        <div class="flip-front"><i class="fas fa-cloud-rain"></i><h3>细雨润物</h3></div>
+                        <div class="flip-back">回南天的朦胧，万物生长。</div>
+                    </div>
+                </div>
+                <div class="flip-card">
+                    <div class="flip-inner">
+                        <div class="flip-front"><i class="fas fa-mug-saucer"></i><h3>早茶氤氲</h3></div>
+                        <div class="flip-back">一盅两件，春日的悠闲。</div>
+                    </div>
+                </div>
+                <div class="flip-card">
+                    <div class="flip-inner">
+                        <div class="flip-front"><i class="fas fa-wind"></i><h3>暖风醉人</h3></div>
+                        <div class="flip-back">珠江水暖，拂面不觉寒。</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第三部分：横向滚动图廊 (炫技6) -->
+        <section class="section">
+            <h2 class="blend-text" style="mix-blend-mode: hard-light;">· 花城掠影 ·</h2>
+            <div class="horizontal-scroll">
+                <div class="scroll-item item1"><i class="fas fa-city fa-3x"></i><span>广州塔·春曦</span></div>
+                <div class="scroll-item item2"><i class="fas fa-leaf fa-3x"></i><span>越秀公园·新绿</span></div>
+                <div class="scroll-item item3"><i class="fas fa-umbrella-beach fa-3x"></i><span>沙面·午后</span></div>
+                <div class="scroll-item item4"><i class="fas fa-water fa-3x"></i><span>珠江·游船</span></div>
+                <div class="scroll-item item1"><i class="fas fa-tree fa-3x"></i><span>白云山·踏青</span></div>
+            </div>
+        </section>
+
+        <!-- 第四部分：3D立方体 + 花形 (炫技7 & 8) -->
+        <section class="section" style="flex-direction: row; flex-wrap: wrap; gap: 3rem;">
+            <div class="cube-container">
+                <div class="cube">
+                    <div class="cube-face front"><i class="fas fa-sun"></i></div>
+                    <div class="cube-face back"><i class="fas fa-cloud-sun"></i></div>
+                    <div class="cube-face right"><i class="fas fa-tree"></i></div>
+                    <div class="cube-face left"><i class="fas fa-fish"></i></div>
+                    <div class="cube-face top"><i class="fas fa-dove"></i></div>
+                    <div class="cube-face bottom"><i class="fas fa-seedling"></i></div>
+                </div>
+            </div>
+            <div class="flower-shape"></div>
+            <div style="max-width: 300px; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); padding: 2rem; border-radius: 30px; color: white;">
+                <i class="fas fa-location-dot"></i> 广州的春日，藏在木棉花的骨朵里，在早茶的蒸汽中，也在骑楼的阴影下。
+            </div>
+        </section>
+
+        <!-- 第五部分：引用诗句 + 交互动画 -->
+        <section class="section">
+            <div class="glass-card fade-up" style="max-width: 700px; text-align: center;">
+                <i class="fas fa-quote-right" style="font-size: 4rem; opacity: 0.5; color: #f9d56e;"></i>
+                <p style="font-size: 2rem; font-style: italic;">「春风先发苑中梅，樱杏桃梨次第开。」</p>
+                <p style="font-size: 1.2rem;">—— 广州的春，是四季的序曲，花城的盛宴。</p>
+            </div>
+            <!-- 炫技9混合模式小彩蛋 -->
+            <div style="margin-top: 3rem; font-size: 1.8rem; background: #000; padding: 1rem; border-radius: 999px;">
+                <span style="mix-blend-mode: difference; color: white;">#春日限定</span>
+            </div>
+        </section>
+
+        <footer>
+            <i class="fas fa-camera"></i> 探寻广州之春 · 沉浸式数字叙事  |  前端炫技集锦：粒子/3D/玻璃/滚动/剪辑/混合模式  |  © 2025 花城印象
+        </footer>
+    </main>
+
+    <script>
+        (function() {
+            // ---------- 炫技2：粒子系统 (Canvas + 鼠标互动) ----------
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let particles = [];
+            const PARTICLE_COUNT = 80;
+            let mouseX = null, mouseY = null;
+
+            function initParticles() {
+                particles = [];
+                for (let i = 0; i < PARTICLE_COUNT; i++) {
+                    particles.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        vx: (Math.random() - 0.5) * 0.6,
+                        vy: (Math.random() - 0.5) * 0.6,
+                        size: Math.random() * 3 + 2,
+                        color: `hsla(${Math.random() * 40 + 350}, 70%, 70%, 0.8)` // 粉/橙/黄色系
+                    });
+                }
+            }
+
+            function resizeCanvas() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+                initParticles();
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+
+            // 鼠标追踪
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            window.addEventListener('mouseleave', () => {
+                mouseX = null;
+                mouseY = null;
+            });
+
+            // 粒子更新 (含鼠标吸引/排斥)
+            function updateParticles() {
+                for (let p of particles) {
+                    // 边界反弹
+                    if (p.x < 0 || p.x > width) p.vx *= -0.9;
+                    if (p.y < 0 || p.y > height) p.vy *= -0.9;
+                    p.x = Math.min(width, Math.max(0, p.x + p.vx));
+                    p.y = Math.min(height, Math.max(0, p.y + p.vy));
+
+                    // 鼠标交互：吸引力 (让粒子往鼠标聚集)
+                    if (mouseX !== null && mouseY !== null) {
+                        const dx = mouseX - p.x;
+                        const dy = mouseY - p.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 150) {
+                            const force = 0.02;
+                            p.vx += dx * force * 0.1;
+                            p.vy += dy * force * 0.1;
+                            // 限制速度避免飞出
+                            const maxSpeed = 2.2;
+                            let sp = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+                            if (sp > maxSpeed) {
+                                p.vx = (p.vx / sp) * maxSpeed;
+                                p.vy = (p.vy / sp) * maxSpeed;
+                            }
+                        }
+                    }
+
+                    // 随机扰动，模拟春风
+                    p.vx += (Math.random() - 0.5) * 0.03;
+                    p.vy += (Math.random() - 0.5) * 0.03;
+                }
+            }
+
+            function drawParticles() {
+                ctx.clearRect(0, 0, width, height);
+                for (let p of particles) {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.shadowColor = '#fff6b0';
+                    ctx.shadowBlur = 15;
+                    ctx.fill();
+                }
+                // 添加连接线效果 (距离近的粒子连线)
+                ctx.shadowBlur = 0;
+                ctx.strokeStyle = 'rgba(255, 235, 200, 0.15)';
+                ctx.lineWidth = 0.8;
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 100) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(255, 220, 150, ${0.2 - dist/500})`;
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function animate() {
+                updateParticles();
+                drawParticles();
+                requestAnimationFrame(animate);
+            }
+
+            resizeCanvas();
+            animate();
+
+            // ---------- 炫技3：滚动进度条 ----------
+            const progressBar = document.getElementById('progressBar');
+            function updateProgress() {
+                const scrollY = window.scrollY;
+                const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = maxScroll > 0 ? (scrollY / maxScroll) * 100 : 0;
+                progressBar.style.setProperty('--scroll-progress', progress);
+            }
+            window.addEventListener('scroll', updateProgress);
+            updateProgress();
+
+            // ---------- 炫技10：滚动驱动动画 (Intersection Observer) ----------
+            const fadeElements = document.querySelectorAll('.fade-up');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                    } else {
+                        // 可选离开移除，为了效果保留，通常不重复触发，可以不移除，但这里保留可逆以演示
+                        // entry.target.classList.remove('in-view'); 
+                        // (为了好看，移除也可以) 我们选择不移除让已经出现的保留
+                    }
+                });
+            }, { threshold: 0.2, rootMargin: '0px 0px -50px 0px' });
+
+            fadeElements.forEach(el => observer.observe(el));
+
+            // 额外：给所有翻转卡片添加一点3D倾斜效果（鼠标跟随倾斜，额外炫技）
+            const cards = document.querySelectorAll('.flip-card');
+            document.addEventListener('mousemove', (e) => {
+                const mouseXRatio = e.clientX / window.innerWidth - 0.5;
+                const mouseYRatio = e.clientY / window.innerHeight - 0.5;
+                cards.forEach(card => {
+                    const rect = card.getBoundingClientRect();
+                    const cardCenterX = rect.left + rect.width / 2;
+                    const cardCenterY = rect.top + rect.height / 2;
+                    const deltaX = e.clientX - cardCenterX;
+                    const deltaY = e.clientY - cardCenterY;
+                    const dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                    if (dist < 300) {
+                        const rotateY = deltaX * 0.03;
+                        const rotateX = -deltaY * 0.03;
+                        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                    } else {
+                        card.style.transform = '';
+                    }
+                });
+            });
+        })();
+    </script>
+
+    <!-- 确保滚动时背景粒子不变，并且卡片hover效果正常 -->
+    <style>
+        /* 小调整：section间距与背景 */
+        .section { background-color: transparent; }
+        footer { background: rgba(10, 30, 22, 0.6); backdrop-filter: blur(10px); }
+        .horizontal-scroll::-webkit-scrollbar { height: 8px; background: #3a5f5f; }
+        .horizontal-scroll::-webkit-scrollbar-thumb { background: #f9d56e; border-radius: 20px; }
+        .fa-chevron-down { animation: bounce 2s infinite; }
+        @keyframes bounce { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(15px); } }
+        .flip-card { transition: transform 0.2s; }
+    </style>
+</body>
+</html>

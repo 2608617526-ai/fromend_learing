@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>探寻广州之春 · 沉浸式炫技版</title>
+  <!-- 元数据炫技: 丰富描述 + 移动端优化 + 主题颜色 + 预渲染提示 -->
+  <meta name="description" content="一场融合30+HTML/CSS/JS前沿特性的广州春日探险：花瓣雨、3D木棉、音画互动、拖拽寻芳、SVG地标…">
+  <meta name="keywords" content="广州,春天,木棉花,HTML炫技,Canvas,Web Audio,3D,CSS Grid,拖拽,Dialog,Popover">
+  <meta name="author" content="AI 探春使者">
+  <meta name="theme-color" content="#ff9aa5">
+  <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='40' r='25' fill='%23f8a5c2'/%3E%3Cpath d='M30 70 L70 70 L65 90 L35 90Z' fill='%236a994e'/%3E%3C/svg%3E">
+  <!-- 预加载关键资源 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Google Fonts: 优雅字体 -->
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;800&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 (免费图标库) 用于炫技图标 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ---------- 全局CSS变量 · 重置 · 基础炫技 ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: all 0.2s ease-in-out; /* 全局过渡炫技点 */
+    }
+    :root {
+      --spring-pink: #f8d7e3;
+      --blossom: #f8a5c2;
+      --leaf: #6a994e;
+      --sky: #a9d6e5;
+      --canton-teal: #1e6091;
+      --glass: rgba(255,255,255,0.25);
+      --shadow: 0 8px 32px rgba(0, 32, 32, 0.2);
+      --font-serif: 'Playfair Display', serif;
+      --font-sans: 'Quicksand', sans-serif;
+      scroll-behavior: smooth; /* 平滑滚动 */
+    }
+    body {
+      font-family: var(--font-sans);
+      background: linear-gradient(145deg, #f0f7e8 0%, #fff4e9 100%);
+      color: #1e3c2c;
+      line-height: 1.6;
+      min-height: 100vh;
+      backdrop-filter: blur(2px); /* 轻微背景模糊炫技 */
+      padding: 0 1rem 2rem;
+    }
+    /* 自定义高亮选择样式 */
+    ::selection {
+      background: var(--blossom);
+      color: #2d3e2d;
+      text-shadow: 1px 1px 2px white;
+    }
+    /* 自定义滚动条 */
+    ::-webkit-scrollbar {
+      width: 14px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #ffe9dd;
+      border-radius: 20px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--blossom);
+      border-radius: 20px;
+      border: 3px solid #fbe4ed;
+    }
+    /* ---------- 实用炫技类 ---------- */
+    .glass-card {
+      background: var(--glass);
+      backdrop-filter: blur(10px) saturate(180%);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,215,200,0.3);
+      border-radius: 2rem 1rem 2rem 1rem;
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+    }
+    .neo-shadow {
+      box-shadow: 8px 8px 16px #d9cfc1, -8px -8px 16px #fffcf5;
+    }
+    /* ---------- 布局 ---------- */
+    header, section, footer {
+      max-width: 1200px;
+      margin: 3rem auto;
+    }
+    /* 导航栏炫技: flex + backdrop + 粘性定位 + 字母间距 */
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 245, 235, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.8rem 2rem;
+      border-radius: 60px;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 10px;
+      z-index: 99;
+      border: 1px solid #ffe4d5;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #f16b8f, #f9c74f);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: 1px;
+    }
+    .nav-links a {
+      text-decoration: none;
+      margin: 0 0.8rem;
+      color: #2d4a2d;
+      font-weight: 600;
+      border-bottom: 2px solid transparent;
+      transition: 0.2s;
+    }
+    .nav-links a:hover {
+      border-bottom-color: var(--blossom);
+      transform: translateY(-2px);
+    }
+    /* ---------- 英雄区域 + canvas飘花(炫技核心) ---------- */
+    .hero {
+      position: relative;
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      isolation: isolate; /* 创建新层叠上下文 */
+    }
+    #petal-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .hero h1 {
+      font-size: clamp(3rem, 12vw, 5.5rem);
+      font-family: var(--font-serif);
+      font-weight: 800;
+      text-shadow: 4px 4px 0 #ffe0c0, 8px 8px 20px rgba(255,140,170,0.3);
+      background: linear-gradient(to right, #bc6c25, #a7c957, #bc6c25);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.5rem;
+      animation: float 6s infinite alternate;
+    }
+    @keyframes float {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-15px); }
+    }
+    .hero p {
+      font-size: 1.4rem;
+      background: rgba(255,255,240,0.5);
+      backdrop-filter: blur(4px);
+      padding: 0.8rem 2rem;
+      border-radius: 60px;
+      box-shadow: 0 10px 30px -10px #f080a0;
+    }
+    /* 向下滚动提示 */
+    .scroll-hint {
+      margin-top: 3rem;
+      font-size: 2rem;
+      animation: bounce 1.8s infinite;
+    }
+    @keyframes bounce {
+      0%,100%{ transform: translateY(0); }
+      50%{ transform: translateY(15px); }
+    }
+    /* ---------- 炫技网格卡片 (Grid + aspect-ratio + 图片自适应) ---------- */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+    .card {
+      background: rgba(255,250,240,0.7);
+      backdrop-filter: blur(5px);
+      border-radius: 30px 10px 30px 10px;
+      padding: 1.2rem;
+      box-shadow: var(--shadow);
+      transition: all 0.25s cubic-bezier(0.2,0.9,0.4,1);
+      border: 1px solid #ffe2d4;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover {
+      transform: scale(1.03) rotate(0.5deg);
+      background: rgba(255,255,255,0.8);
+      box-shadow: 0 30px 40px -20px #b36b7c;
+    }
+    .card-img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      border-radius: 20px 5px 20px 5px;
+      filter: drop-shadow(0 6px 8px #aab3a0);
+      background: linear-gradient(145deg, #fad0c4, #fce2c1); /* 模拟图片占位 */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+    /* 使用figure, figcaption */
+    figure {
+      margin: 0;
+    }
+    figcaption {
+      font-style: italic;
+      color: #516b41;
+      text-align: right;
+      margin-top: 0.4rem;
+    }
+    /* ---------- 3D翻转卡片 (炫技 preserve-3d) ---------- */
+    .flip-container {
+      background: transparent;
+      width: 200px;
+      height: 260px;
+      perspective: 2000px;
+      margin: 1rem auto;
+    }
+    .flipper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: 0.8s;
+      transform-style: preserve-3d;
+    }
+    .flip-container:hover .flipper {
+      transform: rotateY(180deg);
+    }
+    .front, .back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 30px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+    .front {
+      background: #fde4cf;
+      color: #3f5e3f;
+      border: 2px solid white;
+    }
+    .back {
+      background: #b7d7a8;
+      color: #1f3a1f;
+      transform: rotateY(180deg);
+    }
+    /* ---------- 拖拽区域炫技 ---------- */
+    .drag-area {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      background: rgba(225,240,210,0.4);
+      backdrop-filter: blur(4px);
+      border-radius: 60px;
+      padding: 2rem;
+      border: 2px dashed #b5c9a0;
+    }
+    .draggable {
+      width: 90px;
+      height: 90px;
+      background: #ffe3b0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      cursor: grab;
+      user-select: none;
+      box-shadow: 0 12px 20px -8px #b38b60;
+      transition: 0.1s;
+      border: 2px solid #fff5e3;
+    }
+    .draggable:active {
+      cursor: grabbing;
+      opacity: 0.8;
+      transform: scale(0.98);
+    }
+    .drop-zone {
+      width: 150px;
+      height: 150px;
+      background: #cfe1b9;
+      border-radius: 30px 60px 30px 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      border: 3px dotted #87a56d;
+      transition: 0.3s;
+    }
+    .drop-zone.drag-over {
+      background: #fde48c;
+      transform: scale(1.05);
+      border-color: #f28b82;
+    }
+    /* ---------- 音频可视化canvas ---------- */
+    .audio-viz-box {
+      background: #1e3c2c30;
+      border-radius: 48px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #audio-canvas {
+      width: 100%;
+      height: 120px;
+      border-radius: 40px;
+      background: #263f2c;
+      box-shadow: inset 0 0 20px #050b07;
+    }
+    /* ---------- 表单区: 各种input炫技 ---------- */
+    .form-spring {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+      gap: 1.5rem;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      background: rgba(255,238,224,0.5);
+      border-radius: 30px;
+      padding: 1.2rem;
+      backdrop-filter: blur(4px);
+    }
+    input, select, textarea {
+      padding: 0.8rem;
+      border-radius: 30px;
+      border: 1px solid #dbbca1;
+      background: rgba(255,255,240,0.8);
+      font-family: var(--font-sans);
+      outline: none;
+    }
+    input:focus, select:focus {
+      border-color: #f28b82;
+      box-shadow: 0 0 0 3px #fbc4c0;
+    }
+    /* 新增popover炫技 */
+    [popover] {
+      background: #ffe7db;
+      border: none;
+      border-radius: 60px 20px 60px 20px;
+      padding: 2rem;
+      box-shadow: 0 30px 50px #7f5a5a;
+      backdrop-filter: blur(16px);
+      font-size: 1.2rem;
+      max-width: 350px;
+    }
+    /* 对话框样式 */
+    dialog {
+      border: none;
+      border-radius: 50px 20px 50px 20px;
+      background: #fbefd5;
+      padding: 2rem;
+      box-shadow: 0 40px 70px #3b443b;
+      &::backdrop {
+        background: rgba(0,20,10,0.3);
+        backdrop-filter: blur(4px);
+      }
+    }
+    /* footer details */
+    details {
+      background: #d5e6cf;
+      border-radius: 40px;
+      padding: 1rem 2rem;
+      summary {
+        font-weight: 800;
+        cursor: pointer;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+    }
+    /* 其他小炫技 */
+    mark {
+      background: #fbe672;
+      padding: 0.2rem 0.4rem;
+      border-radius: 30px;
+    }
+    time {
+      font-weight: bold;
+      color: #ac4e6b;
+    }
+    meter, progress {
+      width: 100%;
+      height: 30px;
+      border-radius: 30px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 弹出dialog炫技: 欢迎模态框 (将在JS中显示) -->
+  <dialog id="welcomeDialog">
+    <h2 style="color:#bc4742;">🌸 寻春·花城 🌸</h2>
+    <p>欢迎探寻<mark>广州之春</mark>！这里木棉如火，细雨润物。本页面集成了<time datetime="2025-03">2025年春</time>最新HTML炫技：Canvas飘花、3D翻转、拖拽、音频可视化、popover、表单火箭… 请尽情交互！</p>
+    <form method="dialog" style="text-align: right; margin-top:1rem;">
+      <button value="cancel" style="background:#cfe1b9; border-radius:30px; padding:0.5rem 1.5rem; border:none;">✨ 开始探寻</button>
+    </form>
+  </dialog>
+
+  <!-- 固定导航 (header) -->
+  <nav>
+    <span class="logo"><i class="fas fa-seedling" style="color: var(--leaf);"></i> 羊城探春</span>
+    <div class="nav-links">
+      <a href="#grid"><i class="fas fa-th"></i> 花城映像</a>
+      <a href="#3d"><i class="fas fa-cube"></i> 3D木棉</a>
+      <a href="#drag"><i class="fas fa-hand-pointer"></i> 拖拽寻芳</a>
+      <a href="#audio"><i class="fas fa-headphones"></i> 听春</a>
+      <a href="#form"><i class="fas fa-paint-brush"></i> 春色采集</a>
+      <button popovertarget="tips-popover" style="background:none; border:none; font-size:1.2rem; color:#2d4a2d; cursor:pointer;"><i class="fas fa-info-circle"></i> 锦囊</button>
+    </div>
+  </nav>
+
+  <!-- popover彩蛋: 点击锦囊出现 -->
+  <div id="tips-popover" popover>
+    <h3><i class="fas fa-map-pin"></i> 广州春日锦囊</h3>
+    <ul style="margin-left:1.2rem;">
+      <li><mark>木棉花</mark> 是市花，又称“英雄花”</li>
+      <li><time datetime="03-15">三月中</time> 白云山桃花涧最佳</li>
+      <li><i class="fas fa-umbrella"></i> 回南天可能偶遇，带好心情</li>
+    </ul>
+    <button popovertarget="tips-popover" popovertargetaction="hide" style="border-radius:40px; padding:0.5rem 1rem;">收起</button>
+  </div>
+
+  <!-- 英雄区 + Canvas背景 -->
+  <section class="hero">
+    <canvas id="petal-canvas"></canvas>
+    <h1>探寻·广州之春</h1>
+    <p>木棉絮语 · 珠江叠彩 · 万物生发</p>
+    <div class="scroll-hint"><i class="fas fa-chevron-down"></i></div>
+  </section>
+
+  <!-- 图片网格 + 响应式图片picture / 微格式 -->
+  <section id="grid">
+    <h2 style="font-size: 2.5rem; margin-bottom:1rem;"><i class="fas fa-images"></i> 春日映像 · 花城掠影</h2>
+    <div class="card-grid">
+      <figure class="card">
+        <!-- picture + source 炫技: 不同格式 -->
+        <picture>
+          <source srcset="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f8c7cc'/%3E%3Ccircle cx='200' cy='150' r='80' fill='%23f28b82'/%3E%3Ctext x='120' y='170' fill='white' font-size='40'%3E🌸%3C/text%3E%3C/svg%3E" type="image/svg+xml">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23fac9b8'/%3E%3Ccircle cx='200' cy='150' r='80' fill='%23e63946'/%3E%3Ctext x='130' y='180' fill='white' font-size='50'%3E🌺%3C/text%3E%3C/svg%3E" alt="木棉花开" class="card-img" loading="lazy">
+        </picture>
+        <figcaption>越秀公园 · 木棉</figcaption>
+      </figure>
+      <div class="card">
+        <div class="card-img">🏞️</div>
+        <h3>白云山春晓</h3>
+        <p><i class="fas fa-cloud-sun"></i> 桃花涧 <mark>花期正盛</mark>，负离子爆表。</p>
+        <meter value="0.9" max="1" low="0.3" high="0.7" optimum="0.8">空气质量优良</meter>
+      </div>
+      <div class="card">
+        <div class="card-img">🌉</div>
+        <h3>珠江夜·春江</h3>
+        <p><time datetime="19:30">19:30</time> 猎德大桥灯光秀，春江旖旎。</p>
+        <progress value="80" max="100"> 游览舒适度80%</progress>
+      </div>
+      <div class="card">
+        <div class="card-img">🍃</div>
+        <h3>沙面·西洋春</h3>
+        <p>老建筑与新绿交融，<i class="fas fa-tree"></i> 古木棉。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3D翻转卡片 & SVG广州塔炫技 -->
+  <section id="3d" style="display: flex; flex-wrap: wrap; gap:3rem; align-items: center;">
+    <div style="flex:1; min-width:260px;">
+      <h2><i class="fas fa-cube"></i> 3D 木棉 & 广州塔</h2>
+      <div class="flip-container">
+        <div class="flipper">
+          <div class="front">
+            <i class="fas fa-tree" style="font-size:4rem; color:#b44332;"></i>
+            <h3>木棉王</h3>
+            <p>树龄300+</p>
+          </div>
+          <div class="back">
+            <i class="fas fa-heart" style="font-size:4rem;color:#f94144;"></i>
+            <p>又称英雄树</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- SVG炫技: 绘制广州塔 + CSS动画 -->
+    <div style="flex:2; min-width:260px;">
+      <svg viewBox="0 0 200 300" width="200" height="280" style="display:block; margin:0 auto; filter: drop-shadow(0 10px 10px #8d9f8b);">
+        <rect x="70" y="250" width="60" height="20" fill="#905e3b" rx="5" />
+        <rect x="82" y="150" width="36" height="100" fill="#77aaff" />
+        <circle cx="100" cy="140" r="20" fill="#f5b342" />
+        <ellipse cx="100" cy="100" rx="30" ry="18" fill="#d9986a" />
+        <ellipse cx="100" cy="60" rx="40" ry="20" fill="#ddb892" />
+        <ellipse cx="100" cy="20" rx="30" ry="12" fill="#e6ccb0" />
+        <line x1="40" y1="40" x2="160" y2="40" stroke="#f28482" stroke-width="4" stroke-dasharray="5,5">
+          <animate attributeName="stroke-dashoffset" from="0" to="50" dur="3s" repeatCount="indefinite" />
+        </line>
+        <text x="50" y="290" fill="#386641" font-size="14">小蛮腰 · 春意</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- 拖拽寻芳区: 使用原生drag & drop 炫技 -->
+  <section id="drag">
+    <h2><i class="fas fa-hand-peace"></i> 拖拽花朵到木棉枝头</h2>
+    <div class="drag-area" id="dragArea">
+      <div class="draggable" draggable="true" id="flower1" data-value="🌸">🌸</div>
+      <div class="draggable" draggable="true" id="flower2" data-value="🌼">🌼</div>
+      <div class="draggable" draggable="true" id="flower3" data-value="🌺">🌺</div>
+      <div class="drop-zone" id="dropZone">🌸 放入花朵</div>
+    </div>
+    <p><span id="dropMessage"></span></p>
+  </section>
+
+  <!-- 音频可视化 + 春天之声 (Web Audio + Canvas) 炫技 -->
+  <section id="audio">
+    <h2><i class="fas fa-music"></i> 春之音 · 可视化</h2>
+    <div class="audio-viz-box glass-card">
+      <canvas id="audio-canvas" width="800" height="120"></canvas>
+      <div style="margin-top:1rem; display:flex; gap:1rem; flex-wrap: wrap; align-items:center;">
+        <button id="playSoundBtn" style="background:#fbc4ab; border:none; border-radius:40px; padding:0.8rem 1.8rem;"><i class="fas fa-play"></i> 播放鸟鸣/雨声(合成)</button>
+        <button id="stopSoundBtn" style="background:#cbd5b0; border:none; border-radius:40px; padding:0.8rem 1.8rem;"><i class="fas fa-stop"></i> 停止</button>
+        <span>音量 <meter id="audioMeter" value="0.7" min="0" max="1"></meter></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 表单区 + 所有input类型 + output + 颜色选择等 -->
+  <section id="form">
+    <h2><i class="fas fa-pagelines"></i> 定制你的广州春日</h2>
+    <form class="form-spring" oninput="rangeOutput.value = rangeVal.valueAsNumber">
+      <div class="input-group">
+        <label><i class="fas fa-user"></i> 昵称 (text)</label>
+        <input type="text" placeholder="例如：木棉客" autocomplete="nickname">
+      </div>
+      <div class="input-group">
+        <label><i class="fas fa-calendar"></i> 计划游览日 (date)</label>
+        <input type="date" value="2025-03-20" min="2025-03-01" max="2025-05-31">
+      </div>
+      <div class="input-group">
+        <label><i class="fas fa-palette"></i> 春天的颜色 (color)</label>
+        <input type="color" value="#f8a5c2" list="colorList">
+        <datalist id="colorList">
+          <option>#f4acb7</option><option>#a7c957</option><option>#6a994e</option>
+        </datalist>
+      </div>
+      <div class="input-group">
+        <label><i class="fas fa-leaf"></i> 喜欢程度 (range) <output id="rangeOutput">7</output></label>
+        <input type="range" id="rangeVal" value="7" min="0" max="10" step="1">
+      </div>
+      <div class="input-group">
+        <label><i class="fas fa-cloud-rain"></i> 湿度 (meter)</label>
+        <meter value="0.78" min="0" max="1" low="0.3" high="0.8">78%</meter>
+      </div>
+      <div class="input-group">
+        <label><i class="fas fa-thermometer-half"></i> 温度计 (progress)</label>
+        <progress value="24" max="35">24°C</progress>
+      </div>
+      <div class="input-group">
+        <label> 探春留言 (contenteditable)</label>
+        <div contenteditable="true" style="border:1px solid #f4a3a3; border-radius:40px; padding:1rem; background: white;">写下你对广州春天的印象…</div>
+      </div>
+      <div class="input-group">
+        <label> 游览方式 (datalist)</label>
+        <input list="transports" placeholder="点击选择">
+        <datalist id="transports">
+          <option>地铁+步行</option><option>骑行</option><option>游船</option>
+        </datalist>
+      </div>
+    </form>
+  </section>
+
+  <!-- footer + details + address + 微格式 -->
+  <footer>
+    <details>
+      <summary><i class="fas fa-code"></i> 本页炫技清单 (点击展开)</summary>
+      <ul style="columns:2; padding:1rem;">
+        <li>Canvas 动态花瓣雨</li><li>Dialog 模态欢迎</li><li>Popover 锦囊</li>
+        <li>3D transform 翻转</li><li>SVG 动画线条</li><li>拖拽 Drag & Drop</li>
+        <li>Web Audio 合成+可视化</li><li>Picture + source 响应式</li><li>Meter/Progress 语义</li>
+        <li>Grid / Flex / 粘性导航</li><li>contenteditable</li><li>datalist + color picker</li>
+        <li>CSS backdrop模糊</li><li>自定义滚动条</li><li>::selection 样式</li>
+        <li>滚动捕捉(平滑)</li><li>字体图标</li><li>时间微格式 mark</li>
+        <li>等等等等……</li>
+      </ul>
+    </details>
+    <address style="margin-top:2rem; text-align:center; font-style:normal;">
+      <i class="fas fa-map-pin"></i> 探寻广州 · 越秀公园 · 白云山 · 荔枝湾涌<br>
+      <small>© 2025 春之花城 | 数据均为虚构 交互炫技为主</small>
+    </address>
+  </footer>
+
+  <!-- 所有JS炫技 -->
+  <script>
+    (function() {
+      // ---------- 1. 欢迎 dialog ----------
+      const dialog = document.getElementById('welcomeDialog');
+      window.addEventListener('load', () => {
+        dialog.showModal();
+      });
+
+      // ---------- 2. Canvas 花瓣雨 ----------
+      const canvas = document.getElementById('petal-canvas');
+      const ctx = canvas.getContext('2d');
+      let width, height;
+      let petals = [];
+
+      function initPetalCanvas() {
+        width = canvas.parentElement.clientWidth;
+        height = canvas.parentElement.clientHeight;
+        canvas.width = width;
+        canvas.height = height;
+        const petalCount = 60;
+        petals = [];
+        for (let i = 0; i < petalCount; i++) {
+          petals.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            r: 6 + Math.random() * 14,
+            d: 5 + Math.random() * 10, // 密度/速度
+            color: `rgba(255, ${170 + Math.floor(60 * Math.random())}, ${190 + Math.floor(40 * Math.random())}, ${0.4 + Math.random() * 0.3})`,
+            angle: Math.random() * Math.PI * 2,
+            swing: Math.random() * 0.1,
+          });
+        }
+      }
+
+      function drawPetals() {
+        ctx.clearRect(0, 0, width, height);
+        petals.forEach(p => {
+          ctx.beginPath();
+          ctx.ellipse(p.x, p.y, p.r * 0.8, p.r * 0.5, p.angle, 0, 2 * Math.PI);
+          ctx.fillStyle = p.color;
+          ctx.fill();
+          // 移动
+          p.y += 0.6 * p.d / 10;
+          p.x += Math.sin(p.angle) * 0.4;
+          p.angle += p.swing;
+          if (p.y > height + 20) {
+            p.y = -20;
+            p.x = Math.random() * width;
+          }
+          if (p.x > width + 20) p.x = -20;
+          if (p.x < -20) p.x = width + 20;
+        });
+        requestAnimationFrame(drawPetals);
+      }
+
+      window.addEventListener('resize', () => {
+        initPetalCanvas();
+      });
+      initPetalCanvas();
+      drawPetals();
+
+      // ---------- 3. 拖拽炫技 ----------
+      const draggables = document.querySelectorAll('.draggable');
+      const dropZone = document.getElementById('dropZone');
+      const dropMsg = document.getElementById('dropMessage');
+
+      draggables.forEach(item => {
+        item.addEventListener('dragstart', e => {
+          e.dataTransfer.setData('text/plain', e.target.getAttribute('data-value') || '🌸');
+        });
+      });
+
+      dropZone.addEventListener('dragover', e => {
+        e.preventDefault();
+        dropZone.classList.add('drag-over');
+      });
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('drag-over');
+      });
+      dropZone.addEventListener('drop', e => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        const data = e.dataTransfer.getData('text/plain');
+        dropMsg.innerText = `✨ 你把 ${data} 留在了木棉树上！`;
+        dropZone.innerHTML = data + ' 已放置';
+      });
+
+      // ---------- 4. Web Audio 可视化 ----------
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      let oscillator = null;
+      let gainNode = audioCtx.createGain();
+      let analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 256;
+      gainNode.connect(analyser);
+      analyser.connect(audioCtx.destination);
+
+      const canvasAudio = document.getElementById('audio-canvas');
+      const ctxAudio = canvasAudio.getContext('2d');
+      let source = null;
+      let isPlaying = false;
+
+      function drawAudio() {
+        if (!analyser) return;
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        analyser.getByteFrequencyData(dataArray);
+
+        ctxAudio.clearRect(0, 0, canvasAudio.width, canvasAudio.height);
+        ctxAudio.fillStyle = '#26432c';
+        ctxAudio.fillRect(0, 0, canvasAudio.width, canvasAudio.height);
+        const barWidth = (canvasAudio.width / bufferLength) * 2.5;
+        let x = 0;
+        for (let i = 0; i < bufferLength; i++) {
+          let barHeight = dataArray[i] * 0.6;
+          ctxAudio.fillStyle = `rgb(${210 + i % 40}, ${150 + barHeight % 100}, 180)`;
+          ctxAudio.fillRect(x, canvasAudio.height - barHeight, barWidth, barHeight);
+          x += barWidth + 1;
+        }
+        requestAnimationFrame(drawAudio);
+      }
+      drawAudio();
+
+      document.getElementById('playSoundBtn').addEventListener('click', () => {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        if (oscillator) {
+          oscillator.stop();
+          oscillator.disconnect();
+        }
+        oscillator = audioCtx.createOscillator();
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
+        // 添加一些鸟鸣般的变化
+        oscillator.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.2);
+        oscillator.frequency.exponentialRampToValueAtTime(330, audioCtx.currentTime + 0.5);
+
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        oscillator.connect(gainNode);
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 2); // 持续2秒
+        document.getElementById('audioMeter').value = 0.4 + Math.random() * 0.3;
+      });
+
+      document.getElementById('stopSoundBtn').addEventListener('click', () => {
+        if (oscillator) {
+          oscillator.stop();
+          oscillator.disconnect();
+          oscillator = null;
+        }
+      });
+
+      // 自动调整canvas尺寸
+      canvasAudio.width = canvasAudio.clientWidth || 800;
+      canvasAudio.height = 120;
+    })();
+  </script>
+
+  <!-- 额外的语义微格式: 使用cite, blockquote, 等 -->
+  <section style="max-width:1200px; margin:2rem auto; background: #fff8ed; border-radius: 80px; padding:1.5rem;">
+    <blockquote cite="https://example.com/guangzhou-spring">
+      <p>“<q>三月木棉红似火，羊城无处不飞花</q>” —— 清 · 羊城竹枝词</p>
+    </blockquote>
+    <p>更多春日探寻：<cite>《广州春天漫步指南》</cite> 即将推出。</p>
+  </section>
+</body>
+</html>
