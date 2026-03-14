@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>表单常用控件</title>
+</head>
+<body>
+    <form action="https://search.jd.com/search" target="_self">
+        <!--disable可以把用户名锁住让用户不能输入,几乎所有输入的标签都可以用这个属性-->
+        账户：<input type="text" name="account" value="zhangsan"
+        maxlength="10" disabled><!--中文字符也是10个，与数据结构学的字节不同-->
+        <!--value用于控制input的默认输入文本，输入框没什么用，但是单选和复选框要写-->
+        <br>
+        密码：<input type="password" name="pwd"  maxlength="10"> 
+        <br>
+        性别：<input type="radio" name="gender" value="male" checked>男 
+        <!--checked能够让男一开始就被勾选上-->
+              <input type="radio" name="gender" value="female">女
+              <!--name属性可以给他们划分到一组去，然后点击一个另一个就会自动取消
+            value在这里起到一个表单传递input信息的作用，没有不知道提交的表单里按钮
+            选的是男还是女-->
+        <br>
+        爱好：<input type="checkbox" name="hobby" value="foolbehavior">刷视频
+              <input type="checkbox" name="hobby" value="mofang">玩魔方
+              <input type="checkbox" name="hobby" value="outerwilds" >星际拓荒
+              <!--name是属性，value是表单传递的具体数据和信息，没有就传递不了，显示为on-->
+        <br>
+        其他：
+        <!--文本域，cols是列数宽，rows是行数就是高，这个注释也会在文本域里显示,可以编辑-->
+        <textarea name="other" cols="22" rows="10"></textarea>
+        <!--隐藏域-->
+        <br>
+        籍贯：
+        <select name="from">
+            <option value="粤" >广州</option>
+            <option value="川" selected>成都</option>
+            <option value="渝" disabled>重庆</option>
+        </sekect>
+        <br>
+        <!--真他吗神奇，我把下面这个隐藏域去掉之后，按钮就和下拉菜单在同一行了，这是百思不得其解-->
+            <input type="hidden" name="tag" value="防止批量注册">
+        <!--隐藏域可以做到不在用户界面显示，但是依然属性和信息把传到表单上-->
+        <br>
+        <input type="submit" value="确认">
+        <!-- 按钮的另一种写法，按钮不写name，因为不用提供信息-->
+        <!-- <button type="submit">确认</button> -->
+         <button type="reset" value="重置">重置</button>
+         <!--重置能回到默认值-->
+         <button type="button">检测账户是否被注册</button>
+         <!--注意，button的默认值type属性就是submit-->
+    </form>
+</body>
+</html>

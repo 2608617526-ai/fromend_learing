@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+
+        <title>表格</title>
+    </head>
+
+    <body>
+        <table border="10" width="500" cellspacing="0">
+        <!--表格，border是边框属性，1是像素宽
+        width和height控制的是表格主体,width的意思是表格至少500，
+        后面其他属性冲突了可以超过。cellspacing是单元格之间的距离-->
+            <!--表格标题-->
+            <caption>学生信息</caption>
+            <!--表格头部-->
+            <thead height="100" align="left" valign="bottom">
+                <!--align是水平对齐，valign是高度对齐-->
+                <tr><!--行-->
+                    <th>姓名</th><!--列，或者说单元格-->
+                    <th>性别</th>
+                    <th>年龄</th>
+                    <th>民族</th>
+                    <th>政治面貌</th>
+                </tr>
+            </thead>
+            <!--表格主体,主体里面行依然是tr，单元格或者说列就用td-->
+            <tbody height="447" align="right" valign="top">
+                <tr > 
+                    <!--如果你对每一行的高度都有要求，
+                    那你最好呃，先对行的最小单位进行高度调整，
+                    总高度会根据你的小单位进行实时渲染调整-->>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>18</td>
+                    <td>民族</td>
+                    <td>团员</td>
+                </tr>
+                <tr>
+                    <td>张五</td>
+                    <td>男</td>
+                    <td>18</td>
+                    <td>蒙古族</td>
+                    <td>群众</td>
+                </tr>
+                <tr>
+                    <td>张四</td>
+                    <td>男</td>
+                    <td>44</td>
+                    <td>汉族</td>
+                    <td>团员</td>
+                </tr>
+            </tbody>
+                
+            <!--表格脚注-->
+            <tfoot>
+                <tr>
+                    <td></td>   <!--空出来-->
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>共计：4人</td>
+                </tr>
+            </tfoot>
+        </table>
+    </body>
+</html>

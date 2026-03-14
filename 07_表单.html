@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>表单</title>
+	</head>
+	<body>
+		<!--form是表单，action表示表单提交的地址-->
+        <form action="https://www.baidu.com/s" target="_blank"><!--通过表单联系百度-->
+			<input type="text" name="wd">
+			<!--name用于表示输入的属性，比如表单提交的时候属性必须要符合百度的wd，
+			百度才会把你输入的东西拿去搜索-->
+			<button>百度搜索</button>
+		</form>
+		<form action="https://search.jd.com/search" target="_blank" method="get">
+			<!--method是表单提交的方式，有get，post-->
+			<input type="text" name="keyword">
+			<button>京东搜索</button>
+		</form>
+		<a href="https://search.jd.com/search?keyword=手机">京东搜索手机</a>
+	</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>获取焦点</title>
+</head>
+<body>
+    <form action="https://search.jd.com/search" target="_self">
+        <!--主要信息-->
+        <fieldset>
+            <legend>主要信息</legend>
+            <label for="zhanghu">账户：</label>
+            <input id="zhanghu" type="text" name="account" value="zhangsan"
+            maxlength="10">
+            <br>
+            <label for="mima">密码：</label>
+            <input id="mima" type="password" name="pwd"  maxlength="10"> 
+            <br>
+            <!--你也可以直接用label把全部内容直接包裹住，那点击任何部分的内容，都可以-->
+            性别：<label><input type="radio" name="gender" value="male" checked>男</label>
+                <label><input type="radio" name="gender" value="female">女</label>
+        </fieldset>
+            <!--label标签起到一个关联焦点作用，for和id关联，for标签里的内容被点击，那么id的内容会被聚焦-->
+            <fieldset>
+                <legend>其他信息</legend>
+                爱好：<input type="checkbox" name="hobby" value="foolbehavior">刷视频
+                <input type="checkbox" name="hobby" value="mofang">玩魔方
+                <input type="checkbox" name="hobby" value="outerwilds" >星际拓荒
+            <br>
+            其他：
+            <textarea name="other" cols="22" rows="10"></textarea>
+            <br>
+            籍贯：
+            <select name="from">
+                <option value="粤" >广州</option>
+                <option value="川" selected>成都</option>
+                <option value="渝" disabled>重庆</option>
+            </select>
+            </fieldset>
+                <input type="hidden" name="tag" value="防止批量注册">
+            <input type="submit" value="确认">
+            <button type="reset" value="重置">重置</button>
+            <button type="button">检测账户是否被注册</button>
+        </form>
+    </body>
+    </html>
