@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, user-scalable=yes">
+    <title>花城春日 · kk巨献</title>
+    <!-- 字体与图标库 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- 加入更艺术的字体：华文楷体 / 隶书 / 以及Google Fonts中的书法体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+KuaiLe&family=Quicksand:wght@400;600;800&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Three.js 核心库和轨道控制器 -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+            }
+        }
+    </script>
+    <style>
+        /* ----- 全局重置与变量 ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.2s ease-in-out;
+        }
+        :root {
+            --spring-pink: #ffb7c5;
+            --spring-green: #a8d5ba;
+            --spring-yellow: #ffe194;
+            --spring-clear: #ecf9f2;
+            --card-bg: rgba(255, 250, 240, 0.5);
+            --text-dark: #2e3b2e;
+            --shadow-soft: 0 25px 40px -12px rgba(0, 20, 10, 0.3);
+            --glass-edge: 1px solid rgba(255, 255, 255, 0.6);
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Quicksand', sans-serif;
+            --font-artistic: 'Ma Shan Zheng', '华文楷体', 'KaiTi', cursive;
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(145deg, var(--spring-clear), #ffe6f0 80%);
+            color: var(--text-dark);
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                repeating-linear-gradient(45deg, rgba(168, 213, 186, 0.15) 0px, rgba(168, 213, 186, 0.15) 2px, transparent 2px, transparent 8px),
+                radial-gradient(circle at 30% 40%, rgba(255, 225, 148, 0.25) 0%, transparent 30%);
+        }
+        ::selection {
+            background: var(--spring-pink);
+            color: #2d3e2d;
+            text-shadow: 1px 1px 2px white;
+        }
+        ::-webkit-scrollbar {
+            width: 14px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #ffe9dd;
+            border-radius: 20px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--spring-pink);
+            border-radius: 20px;
+            border: 3px solid #fbe4ed;
+        }
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px) saturate(180%);
+            -webkit-backdrop-filter: blur(8px) saturate(180%);
+            border-radius: 32px 16px 32px 16px;
+            border: var(--glass-edge);
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .glass-card:hover {
+            background: rgba(255, 250, 240, 0.7);
+            box-shadow: 0 35px 50px -10px rgba(210, 120, 120, 0.4);
+            transform: translateY(-8px) scale(1.01);
+            border-radius: 24px 32px 24px 32px;
+        }
+        /* 导航栏 */
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 245, 235, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 0.8rem 2rem;
+            border-radius: 60px;
+            box-shadow: var(--shadow-soft);
+            position: sticky;
+            top: 10px;
+            z-index: 99;
+            border: 1px solid #ffe4d5;
+            margin: 0 auto 2rem;
+            max-width: 1300px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f16b8f, #f9c74f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+        }
+        .logo img {
+            height: 2rem;
+            width: auto;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+        }
+        .nav-links a, .nav-links button {
+            text-decoration: none;
+            margin: 0 0.4rem;
+            color: #2d4a2d;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            transition: 0.2s;
+            padding: 0.3rem 0.5rem;
+            font-family: var(--font-sans);
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .nav-links a:hover, .nav-links button:hover {
+            border-bottom-color: var(--spring-pink);
+            transform: translateY(-2px);
+        }
+        [popover] {
+            background: #ffe7db;
+            border: none;
+            border-radius: 60px 20px 60px 20px;
+            padding: 2rem;
+            box-shadow: 0 30px 50px #7f5a5a;
+            backdrop-filter: blur(16px);
+            font-size: 1.2rem;
+            max-width: 450px;
+            margin: auto;
+            line-height: 1.6;
+        }
+        [popover] h3 {
+            font-family: var(--font-artistic);
+            color: #b34a4a;
+            margin-bottom: 1rem;
+        }
+        [popover] p {
+            margin-bottom: 1rem;
+        }
+        [popover] button {
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
+            background: #cfe1b9;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+        }
+        /* 英雄区域 */
+        .hero {
+            position: relative;
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            isolation: isolate;
+            margin-bottom: 2rem;
+        }
+        #petal-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .hero h1 {
+            font-size: clamp(3rem, 12vw, 6rem);
+            font-family: var(--font-serif);
+            font-weight: 800;
+            text-shadow: 4px 4px 0 #ffe0c0, 8px 8px 20px rgba(255,140,170,0.3);
+            background: linear-gradient(to right, #bc6c25, #a7c957, #bc6c25);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+            animation: float 6s infinite alternate;
+            letter-spacing: 0.5rem;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-15px); }
+        }
+        .hero .sub {
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            font-family: var(--font-artistic);
+            background: rgba(255,250,210,0.5);
+            backdrop-filter: blur(4px);
+            padding: 0.8rem 2rem;
+            border-radius: 60px;
+            border: 1px solid white;
+            box-shadow: 0 15px 25px -8px rgba(0,0,0,0.2);
+            margin-top: 2rem;
+            transform: rotate(-1deg);
+            line-height: 1.3;
+            color: #2d4a2d;
+        }
+        .scroll-hint {
+            margin-top: 3rem;
+            font-size: 2.5rem;
+            animation: bounce 1.8s infinite;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .scroll-hint:hover {
+            transform: scale(1.2);
+            color: #ff8a8a;
+        }
+        @keyframes bounce {
+            0%,100%{ transform: translateY(0); }
+            50%{ transform: translateY(15px); }
+        }
+        /* 内容区 */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            position: relative;
+            z-index: 10;
+        }
+        @media (max-width: 640px) {
+            .container { padding: 1rem 1.2rem; }
+            .nav-links a { margin: 0 0.2rem; font-size: 0.9rem; }
+        }
+        .section-title {
+            font-size: 2.5rem;
+            margin: 4rem 0 2rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            right: -20px;
+            bottom: 5px;
+            height: 12px;
+            background: linear-gradient(90deg, transparent, var(--spring-pink), transparent);
+            z-index: -1;
+            border-radius: 50%;
+            filter: blur(6px);
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        .card {
+            padding: 1.5rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: var(--card-bg);
+            backdrop-filter: blur(5px);
+            border-radius: 30px 10px 30px 10px;
+            border: var(--glass-edge);
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            background: rgba(255,250,240,0.8);
+            transform: scale(1.02) rotate(0.5deg);
+            box-shadow: 0 30px 40px -20px #b36b7c;
+        }
+        .card i {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #c44f4f, #6f9e6f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.8rem;
+            filter: drop-shadow(2px 4px 6px rgba(180, 70, 70, 0.3));
+        }
+        .card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 0.8rem;
+            border-bottom: 3px dotted var(--spring-pink);
+            display: inline-block;
+        }
+        .spring-features {
+            list-style: none;
+            counter-reset: spring-counter;
+            text-align: left;
+            margin-top: 1.2rem;
+        }
+        .spring-features li {
+            counter-increment: spring-counter;
+            margin: 0.5rem 0;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .spring-features li::before {
+            content: counter(spring-counter, lower-roman) "🌸";
+            background: var(--spring-green);
+            color: #2d4a2d;
+            font-size: 0.9rem;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            opacity: 0.8;
+        }
+        .spring-features a {
+            text-decoration: none;
+            color: inherit;
+            display: inline-block;
+            width: 100%;
+            transition: all 0.2s;
+            border-radius: 30px;
+            padding: 0.1rem 0.3rem;
+        }
+        .spring-features a:hover {
+            background: rgba(255,200,200,0.3);
+            transform: translateX(8px);
+            text-shadow: 0 0 5px var(--spring-pink);
+        }
+        .fade-roll {
+            opacity: 0;
+            transform: translateY(40px) scale(0.95);
+            transition: opacity 0.9s cubic-bezier(0.2,0.9,0.1,1.1), transform 0.7s ease;
+        }
+        .fade-roll.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        @media (min-width: 769px) {
+            .tilt-card {
+                transform-style: preserve-3d;
+                transition: transform 0.2s;
+            }
+            .tilt-card:hover {
+                transform: perspective(800px) rotateX(2deg) rotateY(4deg) translateZ(10px);
+            }
+        }
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 5px;
+            background: linear-gradient(90deg, #f194b4, #8ec68e);
+            z-index: 999;
+            border-radius: 0 3px 3px 0;
+            box-shadow: 0 0 15px #f9acc7;
+            transition: width 0.1s;
+        }
+        .glow-spot {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle at center, rgba(255,225,148,0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2;
+            mix-blend-mode: overlay;
+            transform: translate(-50%, -50%);
+            opacity: 0.4;
+            filter: blur(20px);
+        }
+        @media (max-width: 640px) {
+            .glow-spot { display: none; }
+            .section-title { font-size: 2rem; }
+        }
+        footer {
+            margin-top: 5rem;
+            padding: 2rem;
+            text-align: center;
+            border-top: 2px dashed var(--spring-green);
+            background: rgba(240,255,240,0.3);
+            backdrop-filter: blur(2px);
+        }
+        .wave-decoration {
+            width: 100%;
+            height: 80px;
+            background: repeating-linear-gradient( -45deg, transparent, transparent 15px, var(--spring-green) 15px, var(--spring-green) 30px );
+            mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+            -webkit-mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+            margin: 30px 0;
+        }
+
+        /* 暨南板块立方体容器和右侧文字样式 */
+        .jnu-cube-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        .cube-container {
+            flex: 1 1 500px;
+            min-width: 300px;
+            height: 400px;
+            position: relative;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: var(--shadow-soft), 0 0 30px rgba(255,215,140,0.5);
+            border: 1px solid rgba(255,255,255,0.5);
+            background: rgba(0,0,0,0.1);
+            backdrop-filter: blur(4px);
+        }
+        #cube-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .cube-info {
+            flex: 0 1 300px;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 40px 20px 40px 20px;
+            border: var(--glass-edge);
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s;
+            color: var(--text-dark);
+        }
+        .cube-info h3 {
+            font-size: 2rem;
+            border-bottom: 3px dotted var(--spring-pink);
+            margin-bottom: 1rem;
+        }
+        .cube-info p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        @media (max-width: 800px) {
+            .jnu-cube-section {
+                flex-direction: column;
+            }
+            .cube-container, .cube-info {
+                width: 100%;
+            }
+        }
+
+        /* 轮播卡片样式 */
+        .carousel-card {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.3s ease;
+            cursor: grab;
+        }
+        .carousel-track:active {
+            cursor: grabbing;
+        }
+        .carousel-slide {
+            flex: 0 0 100%;
+            display: flex;
+            flex-direction: column;
+            background-color: rgba(200, 220, 200, 0.3);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.5);
+            overflow: hidden;
+            padding: 0.5rem;
+        }
+        .carousel-slide .image-container {
+            aspect-ratio: 16 / 9;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .carousel-slide .slide-caption {
+            padding: 0.8rem 0.5rem 0.3rem;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: var(--text-dark);
+            font-weight: 500;
+            text-align: left;
+            background: rgba(255,255,240,0.3);
+            border-radius: 12px;
+            margin-top: 0.3rem;
+        }
+        /* 图片占位背景色 */
+        .slide1 { background: linear-gradient(135deg, #f7c5a8, #f29b9b); }
+        .slide2 { background: linear-gradient(135deg, #b3e0c9, #7dc5a0); }
+        .slide3 { background: linear-gradient(135deg, #ffe5b3, #ffc48c); }
+
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        .indicator {
+            width: 30px;
+            height: 4px;
+            background: rgba(100, 100, 100, 0.3);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .indicator.active {
+            width: 50px;
+            background: #f08080;
+            box-shadow: 0 0 10px #ffaaaa;
+        }
+    </style>
+</head>
+<body>
+    <!-- 滚动进度条 -->
+    <div id="scroll-progress"></div>
+    <!-- 鼠标光晕 -->
+    <div class="glow-spot" id="glowSpot"></div>
+    <!-- 花瓣画布 (底层) - 覆盖全页面 -->
+    <canvas id="petal-canvas"></canvas>
+
+    <!-- 导航栏 -->
+    <nav>
+        <div class="logo">
+            <!-- 头像路径添加.jpg后缀 -->
+            <img src="./pictures/kk春日头像.jpg" alt="kk头像" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 40 40\'%3E%3Ccircle cx=\'20\' cy=\'20\' r=\'18\' fill=\'%23ffb7c5\'/%3E%3Ctext x=\'10\' y=\'28\' font-size=\'20\' fill=\'%23ffffff\'%3Ekk%3C/text%3E%3C/svg%3E';">
+            <span>kk巨献</span>
+        </div>
+        <div class="nav-links">
+            <a href="#spring-flower"><i class="fas fa-th"></i> 花城掠影</a>
+            <a href="#yunshan"><i class="fas fa-water"></i> 云山珠水</a>
+            <a href="#jnu"><i class="fas fa-university"></i> 暨南的春</a>
+            <button popovertarget="tips-popover"><i class="fas fa-info-circle"></i> 锦囊</button>
+        </div>
+    </nav>
+
+    <!-- popover锦囊 -->
+    <div id="tips-popover" popover>
+        <h3>🌸 广州春日锦囊</h3>
+        <p>广州是一座名副其实的花城，一年四季繁花似锦，春日花开得更甚。在这个美好的季节，kk希望把眼中的春日美好与你共享。同时，这个网站也会作为我找实习时写在简历上的一个小项目。</p>
+        <button popovertarget="tips-popover" popovertargetaction="hide">收起</button>
+    </div>
+
+    <!-- 英雄区 -->
+    <section class="hero">
+        <h1>花 城 春 日</h1>
+        <div class="sub"><i class="fas fa-map-pin"></i> 春日迟迟，木棉灼灼</div>
+        <div class="scroll-hint" id="scrollDownArrow"><i class="fas fa-chevron-down"></i></div>
+    </section>
+
+    <!-- 主内容区 -->
+    <div class="container">
+        <!-- 花城掠影 -->
+        <section class="fade-roll" id="spring-flower">
+            <h2 class="section-title"><i class="fas fa-seedling"></i> 花城掠影 <i class="fas fa-seedling"></i></h2>
+            <div class="card-grid">
+                <div class="card glass-card tilt-card fade-roll delay-1">
+                    <i class="fas fa-tree"></i>
+                    <h3>木棉/黄花风铃木</h3>
+                    <p>木棉如火，风铃金黄，三月的广州是花的海洋。</p>
+                    <ul class="spring-features">
+                        <li><a href="detail-muling.html#nongjiangsuo" target="_self">农讲所 · 木棉</a></li>
+                        <li><a href="detail-muling.html#zhoutouzui" target="_self">洲头咀 · 黄花风铃</a></li>
+                    </ul>
+                </div>
+                <div class="card glass-card tilt-card fade-roll delay-2">
+                    <i class="fas fa-leaf"></i>
+                    <h3>紫荆</h3>
+                    <p>粉白相间，落英缤纷，校园与湖畔的春日浪漫。</p>
+                    <ul class="spring-features">
+                        <li><a href="detail-zijing.html#zhongxinhu" target="_self">大学城中心湖公园</a></li>
+                        <li><a href="detail-zijing.html#huangnong" target="_self">华南农业大学</a></li>
+                    </ul>
+                </div>
+                <div class="card glass-card tilt-card fade-roll delay-3">
+                    <i class="fas fa-tree"></i>
+                    <h3>三角梅</h3>
+                    <p>天桥、老墙上，三角梅倾泻如瀑，热烈似火。</p>
+                    <ul class="spring-features">
+                        <li><a href="detail-sanjiao.html#dongxiaonan" target="_self">东晓南立交</a></li>
+                        <li><a href="detail-sanjiao.html#xiaogang" target="_self">晓港公园</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 云山珠水 (带轮播图的卡片) -->
+        <section class="fade-roll" id="yunshan">
+            <h2 class="section-title"><i class="fas fa-mountain-sun"></i> 云山珠水</h2>
+            <div class="card-grid" id="yunshan-grid">
+                <!-- 卡片1 - 珠江夜韵 轮播 (已按要求修改文字) -->
+                <div class="card glass-card carousel-card" data-carousel-id="carousel1">
+                    <i class="fas fa-water"></i>
+                    <h3>珠江夜韵</h3>
+                    <div class="carousel-container" id="carousel1">
+                        <div class="carousel-track">
+                            <div class="carousel-slide">
+                                <div class="image-container">
+                                    <img src="./pictures/珠江夜韵1.jpg" alt="珠江夜韵1" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23f7c5a8\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌃%3C/text%3E%3C/svg%3E';">
+                                </div>
+                                <div class="slide-caption">珠江上有一座专门供行人行走的桥，叫海心桥。在春天，晚上的江风很柔和，很凉爽</div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="image-container">
+                                    <img src="./pictures/珠江夜韵2.jpg" alt="珠江夜韵2" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23b3e0c9\'/%3E%3Ctext x=\'80\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌉%3C/text%3E%3C/svg%3E';">
+                                </div>
+                                <div class="slide-caption">海心桥上摆了很多花，在晚上我看不太清，凑近嘀咕：这花真的假的？一旁的阿姨马上接话：肯定系真噶啦，花城唔系白叫噶！</div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="image-container">
+                                    <img src="./pictures/珠江夜韵3.jpg" alt="珠江夜韵3" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23ffe5b3\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🚢%3C/text%3E%3C/svg%3E';">
+                                </div>
+                                <div class="slide-caption">灯光璀璨，夜色温柔。如果运气好，你能在珠江边看到eason的粉丝自发聚集起来歌唱，这时候就去和他们一起吹着江风唱唱歌吧！</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-indicators">
+                        <span class="indicator active" data-index="0"></span>
+                        <span class="indicator" data-index="1"></span>
+                        <span class="indicator" data-index="2"></span>
+                    </div>
+                </div>
+                <!-- 卡片2 - 沙面春光 轮播 (新增图片和文字) -->
+                <div class="card glass-card carousel-card" data-carousel-id="carousel2">
+                    <i class="fas fa-umbrella-beach"></i>
+                    <h3>沙面春光</h3>
+                    <div class="carousel-container" id="carousel2">
+                        <div class="carousel-track">
+                            <div class="carousel-slide">
+                                <div class="image-container">
+                                    <img src="./pictures/沙面1.jpg" alt="沙面1" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23f7c5a8\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🏛️%3C/text%3E%3C/svg%3E';">
+                                </div>
+                                <div class="slide-caption">这是沙面的著名打卡点，枝叶与天空围成了一个心形。但其实kk觉得更像中国地图哈</div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="image-container">
+                                    <img src="./pictures/沙面2.jpg" alt="沙面2" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23b3e0c9\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌳%3C/text%3E%3C/svg%3E';">
+                                </div>
+                                <div class="slide-caption">枝叶向上伸展，夕阳刺破枝叶，我觉得这张拍得很有生命力哦</div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="image-container">
+                                    <img src="./pictures/沙面3.jpg" alt="沙面3" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23ffe5b3\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E☕%3C/text%3E%3C/svg%3E';">
+                                </div>
+                                <div class="slide-caption">沙面是一个花团锦簇，浪漫典雅的地方，在kk心里这里是广州citywalk的天花板！</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-indicators">
+                        <span class="indicator active" data-index="0"></span>
+                        <span class="indicator" data-index="1"></span>
+                        <span class="indicator" data-index="2"></span>
+                    </div>
+                </div>
+                <!-- 卡片3 - 海珠湖春景 轮播 (新增图片和文字) -->
+                <div class="card glass-card carousel-card" data-carousel-id="carousel3">
+                    <i class="fas fa-leaf"></i>
+                    <h3>海珠湖春景</h3>
+                    <div class="carousel-container" id="carousel3">
+                        <div class="carousel-track">
+                            <div class="carousel-slide">
+                                <div class="image-container">
+                                    <img src="./pictures/海珠湖春景1.jpg" alt="海珠湖春景1" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23f7c5a8\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🦢%3C/text%3E%3C/svg%3E';">
+                                </div>
+                                <div class="slide-caption">每年都有很多游客来海珠湖公园打卡，花海和广州塔同框很出片</div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="image-container">
+                                    <img src="./pictures/海珠湖春景2.jpg" alt="海珠湖春景2" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23b3e0c9\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌸%3C/text%3E%3C/svg%3E';">
+                                </div>
+                                <div class="slide-caption">每当一批花花期过了，市政府会立刻补种，kk还没有见过粉色的花海</div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="image-container">
+                                    <img src="./pictures/海珠湖春景3.jpg" alt="海珠湖春景3" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23ffe5b3\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌿%3C/text%3E%3C/svg%3E';">
+                                </div>
+                                <div class="slide-caption">海珠湖公园里，花随处可见，开得跟不要钱似的！</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-indicators">
+                        <span class="indicator active" data-index="0"></span>
+                        <span class="indicator" data-index="1"></span>
+                        <span class="indicator" data-index="2"></span>
+                    </div>
+                </div>
+                <!-- 卡片4 - 有轨电车 轮播 (新增图片和文字，三张文字相同) -->
+                <div class="card glass-card carousel-card" data-carousel-id="carousel4">
+                    <i class="fas fa-train"></i>
+                    <h3>有轨电车</h3>
+                    <div class="carousel-container" id="carousel4">
+                        <div class="carousel-track">
+                            <div class="carousel-slide">
+                                <div class="image-container">
+                                    <img src="./pictures/有轨电车1.jpg" alt="有轨电车1" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23f7c5a8\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🚋%3C/text%3E%3C/svg%3E';">
+                                </div>
+                                <div class="slide-caption">广州的有轨电车就像穿行在花的隧道，隔江相望的是天河CBD，嗯，高楼，珠江，花，这些元素都很和谐</div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="image-container">
+                                    <img src="./pictures/有轨电车2.jpg" alt="有轨电车2" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23b3e0c9\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌺%3C/text%3E%3C/svg%3E';">
+                                </div>
+                                <div class="slide-caption">广州的有轨电车就像穿行在花的隧道，隔江相望的是天河CBD，嗯，高楼，珠江，花，这些元素都很和谐</div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="image-container">
+                                    <img src="./pictures/有轨电车3.jpg" alt="有轨电车3" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23ffe5b3\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌆%3C/text%3E%3C/svg%3E';">
+                                </div>
+                                <div class="slide-caption">广州的有轨电车就像穿行在花的隧道，隔江相望的是天河CBD，嗯，高楼，珠江，花，这些元素都很和谐</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-indicators">
+                        <span class="indicator active" data-index="0"></span>
+                        <span class="indicator" data-index="1"></span>
+                        <span class="indicator" data-index="2"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 暨南的春 (立方体保持不变) -->
+        <section class="fade-roll" id="jnu">
+            <h2 class="section-title"><i class="fas fa-university"></i> 暨南的春 <i class="fas fa-university"></i></h2>
+            <div class="jnu-cube-section">
+                <div class="cube-container">
+                    <canvas id="cube-canvas"></canvas>
+                </div>
+                <div class="cube-info glass-card" id="cube-info">
+                    <h3 id="face-title">南门 · 木棉道</h3>
+                    <p id="face-desc">暨南大学南门两侧，木棉参天，三月红花映照学子笑颜。</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="fade-roll">
+            <p>🌸 花城春日 · 每一帧都是紫荆与暖风  🌼</p>
+            <p style="display: flex; gap: 1rem; justify-content: center; font-size: 1.5rem;"><i class="fab fa-weixin"></i> <i class="fab fa-weibo"></i> <i class="fab fa-github"></i></p>
+            <!-- 更新版权文字 -->
+            <p style="opacity:0.7;">2026.3 此网站版权归kk所有</p>
+        </footer>
+    </div>
+
+    <script type="module">
+        // ---------- 花瓣效果 (与之前相同，保持全页面) ----------
+        (function() {
+            const canvas = document.getElementById('petal-canvas');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let petals = [];
+            const PETAL_COUNT = Math.min(180, Math.floor(window.innerWidth / 6));
+            let attractX = null, attractY = null;
+            let attractionEnabled = true;
+            let explodeTimer = null;
+
+            window.addEventListener('mousemove', (e) => {
+                attractX = e.clientX;
+                attractY = e.clientY;
+                if (!explodeTimer) attractionEnabled = true;
+            });
+            window.addEventListener('mouseleave', () => {
+                attractX = null; attractY = null;
+                attractionEnabled = false;
+                if (explodeTimer) { clearTimeout(explodeTimer); explodeTimer = null; }
+                petals.forEach(p => { p.speedY = 0.2 + Math.random() * 0.6; p.speedX = 0.1 - Math.random() * 0.2; });
+            });
+            window.addEventListener('mouseenter', () => { if (!explodeTimer) attractionEnabled = true; });
+            window.addEventListener('touchstart', (e) => {
+                if (e.touches.length) { attractX = e.touches[0].clientX; attractY = e.touches[0].clientY; if (!explodeTimer) attractionEnabled = true; }
+            });
+            window.addEventListener('touchmove', (e) => {
+                if (e.touches.length) { attractX = e.touches[0].clientX; attractY = e.touches[0].clientY; if (!explodeTimer) attractionEnabled = true; }
+            });
+            window.addEventListener('touchend', () => {
+                attractX = null; attractY = null; attractionEnabled = false;
+                if (explodeTimer) { clearTimeout(explodeTimer); explodeTimer = null; }
+                petals.forEach(p => { p.speedY = 0.2 + Math.random() * 0.6; p.speedX = 0.1 - Math.random() * 0.2; });
+            });
+            window.addEventListener('touchcancel', () => {
+                attractX = null; attractY = null; attractionEnabled = false;
+                if (explodeTimer) { clearTimeout(explodeTimer); explodeTimer = null; }
+                petals.forEach(p => { p.speedY = 0.2 + Math.random() * 0.6; p.speedX = 0.1 - Math.random() * 0.2; });
+            });
+
+            document.addEventListener('click', function(e) {
+                let target = e.target;
+                let isInteractive = target.closest('a, button, input, [popover], .nav-links, .card, .spring-features a, .glass-card, .logo, .indicator, .carousel-track, .carousel-slide img, .carousel-slide .slide-caption');
+                if (!isInteractive) {
+                    explodeAt(e.clientX, e.clientY);
+                }
+            });
+
+            function explodeAt(x, y) {
+                attractionEnabled = false;
+                if (explodeTimer) clearTimeout(explodeTimer);
+                petals.forEach(p => {
+                    let dx = p.x - x;
+                    let dy = p.y - y;
+                    let dist = Math.sqrt(dx*dx + dy*dy) || 1;
+                    let force = Math.min(400 / dist, 8);
+                    p.speedX += dx / dist * force * 0.15;
+                    p.speedY += dy / dist * force * 0.15;
+                });
+                explodeTimer = setTimeout(() => {
+                    attractionEnabled = true;
+                    explodeTimer = null;
+                }, 800);
+            }
+
+            class Petal {
+                constructor(inScreen = true) {
+                    if (inScreen) {
+                        this.x = Math.random() * width;
+                        this.y = Math.random() * height;
+                    } else {
+                        this.x = Math.random() * width;
+                        this.y = Math.random() * height - height;
+                    }
+                    this.size = 8 + Math.random() * 16;
+                    this.speedY = 0.2 + Math.random() * 0.6;
+                    this.speedX = 0.1 - Math.random() * 0.2;
+                    this.rotation = Math.random() * Math.PI * 2;
+                    this.rotateSpeed = (Math.random() - 0.5) * 0.01;
+                    this.color = `rgba(${230+Math.random()*30}, ${140+Math.random()*70}, ${160+Math.random()*50}, ${0.6+Math.random()*0.3})`;
+                }
+                update() {
+                    if (attractionEnabled && attractX && attractY) {
+                        const dx = attractX - this.x;
+                        const dy = attractY - this.y;
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+                        if (dist < 500) {
+                            const strength = (1 - dist / 500) * 0.8;
+                            this.speedX += dx * strength * 0.0025;
+                            this.speedY += dy * strength * 0.0025;
+                        }
+                    }
+                    this.y += this.speedY;
+                    this.x += this.speedX;
+                    this.rotation += this.rotateSpeed;
+                    if (this.y > height + 100) {
+                        this.x = Math.random() * width;
+                        this.y = -30;
+                        this.speedY = 0.2 + Math.random() * 0.6;
+                        this.speedX = 0.1 - Math.random() * 0.2;
+                    }
+                    if (this.y < -150) this.y = -30;
+                    if (this.x > width + 150) this.x = -30;
+                    if (this.x < -150) this.x = width + 30;
+                    const maxSpeed = 4.0;
+                    if (Math.abs(this.speedX) > maxSpeed) this.speedX = Math.sign(this.speedX) * maxSpeed;
+                    if (Math.abs(this.speedY) > maxSpeed) this.speedY = Math.sign(this.speedY) * maxSpeed;
+                }
+                draw() {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.rotation);
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size * 0.5, this.size * 0.3, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = 'rgba(255,255,240,0.2)';
+                    ctx.ellipse(-2, -2, this.size*0.15, this.size*0.1, 0, 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+            function initPetals() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+                petals = [];
+                for (let i=0; i<PETAL_COUNT; i++) petals.push(new Petal(true));
+            }
+            function animatePetals() {
+                ctx.clearRect(0, 0, width, height);
+                petals.forEach(p => { p.update(); p.draw(); });
+                requestAnimationFrame(animatePetals);
+            }
+            initPetals();
+            animatePetals();
+            window.addEventListener('resize', initPetals);
+        })();
+
+        // ---------- 滚动进度条 ----------
+        const progressBar = document.getElementById('scroll-progress');
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - window.innerHeight;
+            progressBar.style.width = (winScroll/height)*100 + '%';
+        });
+
+        // ---------- 鼠标光晕 ----------
+        const glow = document.getElementById('glowSpot');
+        if (glow) {
+            document.addEventListener('mousemove', (e) => {
+                glow.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+            });
+            document.addEventListener('mouseleave', () => { glow.style.opacity = '0'; });
+            document.addEventListener('mouseenter', () => { glow.style.opacity = '0.4'; });
+        }
+        if ('ontouchstart' in window) if(glow) glow.style.display = 'none';
+
+        // ---------- Intersection Observer for fade-roll ----------
+        const fadeElements = document.querySelectorAll('.fade-roll');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.15 });
+        fadeElements.forEach(el => observer.observe(el));
+
+        // ---------- 动态颜色 ----------
+        setInterval(() => {
+            const hue = Math.sin(Date.now()/2000)*5;
+            document.documentElement.style.setProperty('--spring-pink', `hsl(350, 80%, ${75+hue}%)`);
+        }, 3000);
+
+        // ---------- 向下箭头跳转 ----------
+        document.getElementById('scrollDownArrow').addEventListener('click', () => {
+            document.getElementById('spring-flower').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // ---------- 轮播图初始化 (支持循环滑动，适用于所有卡片) ----------
+        function initCarousel(cardElement) {
+            const container = cardElement.querySelector('.carousel-container');
+            const track = cardElement.querySelector('.carousel-track');
+            const originalSlides = Array.from(cardElement.querySelectorAll('.carousel-slide'));
+            const indicators = cardElement.querySelectorAll('.indicator');
+            
+            // 保存原始slide数量
+            const originalCount = originalSlides.length;
+            
+            // 克隆第一个和最后一个slide用于循环
+            const firstClone = originalSlides[0].cloneNode(true);
+            const lastClone = originalSlides[originalCount - 1].cloneNode(true);
+            
+            // 将lastClone插入到开头，firstClone插入到末尾
+            track.insertBefore(lastClone, originalSlides[0]);
+            track.appendChild(firstClone);
+            
+            // 更新slides数组
+            const allSlides = track.children;
+            const totalSlides = allSlides.length; // originalCount + 2
+            
+            // 设置初始索引为1（对应原第一张）
+            let currentIndex = 1;
+            let startX = 0, currentX = 0, isDragging = false;
+            
+            // 更新显示位置和指示器
+            function updateCarousel(index, animate = true) {
+                if (!animate) track.style.transition = 'none';
+                else track.style.transition = 'transform 0.3s ease';
+                
+                track.style.transform = `translateX(-${index * 100}%)`;
+                
+                // 计算实际显示的图片索引（去除克隆）
+                let realIndex = (index - 1 + originalCount) % originalCount;
+                
+                // 更新指示器
+                indicators.forEach((dot, i) => {
+                    if (i === realIndex) dot.classList.add('active');
+                    else dot.classList.remove('active');
+                });
+                
+                // 如果index到达边界，需要无动画跳转到对应位置
+                if (index === 0) {
+                    // 到达最左边克隆，跳转到倒数第二张（原最后一张）
+                    setTimeout(() => {
+                        track.style.transition = 'none';
+                        currentIndex = totalSlides - 2;
+                        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                    }, 300);
+                } else if (index === totalSlides - 1) {
+                    // 到达最右边克隆，跳转到第二张（原第一张）
+                    setTimeout(() => {
+                        track.style.transition = 'none';
+                        currentIndex = 1;
+                        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                    }, 300);
+                }
+            }
+            
+            // 拖拽事件
+            const handleDragStart = (e) => {
+                e.preventDefault();
+                startX = e.type === 'mousedown' ? e.pageX : e.touches[0].pageX;
+                currentX = startX;
+                isDragging = true;
+                track.style.transition = 'none';
+            };
+            
+            const handleDragMove = (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                const x = e.type === 'mousemove' ? e.pageX : e.touches[0].pageX;
+                const diff = x - startX;
+                const percentMove = (diff / container.offsetWidth) * 100;
+                // 移动整个track，但限制不要过度拉出边界
+                let newOffset = -currentIndex * 100 + percentMove;
+                // 允许超出一点，但不要太多
+                if (newOffset > 50) newOffset = 50;
+                if (newOffset < -(totalSlides-1)*100 - 50) newOffset = -(totalSlides-1)*100 - 50;
+                track.style.transform = `translateX(${newOffset}%)`;
+                currentX = x;
+            };
+            
+            const handleDragEnd = (e) => {
+                if (!isDragging) return;
+                isDragging = false;
+                track.style.transition = 'transform 0.3s ease';
+                const diff = currentX - startX;
+                const threshold = container.offsetWidth * 0.15;
+                if (Math.abs(diff) > threshold) {
+                    if (diff > 0) {
+                        currentIndex--;
+                    } else {
+                        currentIndex++;
+                    }
+                }
+                if (currentIndex < 0) currentIndex = 0;
+                if (currentIndex >= totalSlides) currentIndex = totalSlides - 1;
+                updateCarousel(currentIndex);
+            };
+            
+            container.addEventListener('mousedown', handleDragStart);
+            window.addEventListener('mousemove', handleDragMove);
+            window.addEventListener('mouseup', handleDragEnd);
+            container.addEventListener('touchstart', handleDragStart, { passive: false });
+            window.addEventListener('touchmove', handleDragMove, { passive: false });
+            window.addEventListener('touchend', handleDragEnd);
+            window.addEventListener('touchcancel', handleDragEnd);
+            
+            indicators.forEach((dot, idx) => {
+                dot.addEventListener('click', () => {
+                    currentIndex = idx + 1;
+                    updateCarousel(currentIndex);
+                });
+            });
+            
+            updateCarousel(1);
+        }
+        
+        document.querySelectorAll('.carousel-card').forEach(card => {
+            initCarousel(card);
+        });
+
+        // ---------- Three.js 发光立方体 (与之前相同) ----------
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        const canvasCube = document.getElementById('cube-canvas');
+        if (!canvasCube) throw new Error('Canvas not found');
+
+        const renderer = new THREE.WebGLRenderer({ canvas: canvasCube, antialias: true, alpha: true });
+        renderer.setSize(canvasCube.clientWidth, canvasCube.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+        const scene = new THREE.Scene();
+        scene.background = null;
+
+        const camera = new THREE.PerspectiveCamera(45, canvasCube.clientWidth / canvasCube.clientHeight, 0.1, 1000);
+        camera.position.set(3, 2, 5);
+        camera.lookAt(0, 0, 0);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.1;
+        controls.rotateSpeed = 0.5;
+        controls.autoRotate = false;
+        controls.enableZoom = true;
+        controls.enablePan = false;
+        controls.maxPolarAngle = Math.PI / 2;
+
+        const ambientLight = new THREE.AmbientLight(0x404060);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffeedd, 1);
+        dirLight.position.set(2, 5, 3);
+        scene.add(dirLight);
+
+        const pointLight1 = new THREE.PointLight(0xffaa88, 1);
+        pointLight1.position.set(2, 2, 3);
+        scene.add(pointLight1);
+
+        const pointLight2 = new THREE.PointLight(0xaaccff, 1);
+        pointLight2.position.set(-2, 1, -3);
+        scene.add(pointLight2);
+
+        const glowLight = new THREE.PointLight(0xffaa55, 1.5);
+        glowLight.position.set(0, 1, 2);
+        scene.add(glowLight);
+
+        const colors = [
+            0xffaaa0, 0xaaffaa, 0xffddaa, 0xaaaaff, 0xffccaa, 0xaaddff
+        ];
+        const materials = colors.map(c => 
+            new THREE.MeshPhongMaterial({
+                color: c,
+                emissive: 0x332211,
+                emissiveIntensity: 0.2,
+                shininess: 40,
+                transparent: true,
+                opacity: 0.7,
+                side: THREE.DoubleSide
+            })
+        );
+
+        const geometry = new THREE.BoxGeometry(2, 2, 2);
+        const cube = new THREE.Mesh(geometry, materials);
+        cube.castShadow = true;
+        cube.receiveShadow = true;
+        scene.add(cube);
+
+        const edges = new THREE.EdgesGeometry(geometry);
+        const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xfff5c0, linewidth: 2 }));
+        cube.add(line);
+
+        const particleGeo = new THREE.BufferGeometry();
+        const particleCount = 300;
+        const positions = new Float32Array(particleCount * 3);
+        for (let i = 0; i < particleCount; i++) {
+            const r = 2.8 + Math.random() * 1.2;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            positions[i*3] = r * Math.sin(phi) * Math.cos(theta);
+            positions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+            positions[i*3+2] = r * Math.cos(phi);
+        }
+        particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const particleMat = new THREE.PointsMaterial({ color: 0xffdd99, size: 0.06, transparent: true, blending: THREE.AdditiveBlending });
+        const particles = new THREE.Points(particleGeo, particleMat);
+        scene.add(particles);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            particles.rotation.y += 0.001;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            const container = canvasCube.parentElement;
+            const newWidth = container.clientWidth;
+            const newHeight = container.clientHeight;
+            renderer.setSize(newWidth, newHeight);
+            camera.aspect = newWidth / newHeight;
+            camera.updateProjectionMatrix();
+        });
+
+        const faceTitles = [
+            '南门 · 木棉道',
+            '明湖 · 春柳',
+            '樱花林 · 校友楼',
+            '万国墙 · 藤蔓',
+            '图书馆 · 春意',
+            '校友楼 · 紫荆'
+        ];
+        const faceDescs = [
+            '暨南大学南门两侧，木棉参天，三月红花映照学子笑颜。',
+            '明湖碧波荡漾，柳条新芽，湖心亭边常有朗朗书声。',
+            '校友楼旁樱花林，粉白相间，春日限定打卡地。',
+            '万国墙边紫藤初绽，微风过处，花瓣如雨。',
+            '图书馆外杜鹃盛开，学子捧书穿行于花间。',
+            '校友楼前木棉与紫荆交相辉映，春意盎然。'
+        ];
+
+        controls.addEventListener('change', () => {
+            const cameraDir = new THREE.Vector3(0, 0, 0);
+            camera.getWorldDirection(cameraDir);
+            const normals = [
+                new THREE.Vector3(1, 0, 0),
+                new THREE.Vector3(-1, 0, 0),
+                new THREE.Vector3(0, 1, 0),
+                new THREE.Vector3(0, -1, 0),
+                new THREE.Vector3(0, 0, 1),
+                new THREE.Vector3(0, 0, -1)
+            ];
+            let maxDot = -Infinity;
+            let bestIndex = 0;
+            normals.forEach((normal, index) => {
+                const worldNormal = normal.clone().applyQuaternion(cube.quaternion);
+                worldNormal.normalize();
+                const faceCenter = worldNormal.clone().multiplyScalar(1);
+                const toCamera = camera.position.clone().sub(faceCenter).normalize();
+                const dot = worldNormal.dot(toCamera);
+                if (dot > maxDot) {
+                    maxDot = dot;
+                    bestIndex = index;
+                }
+            });
+            document.getElementById('face-title').innerText = faceTitles[bestIndex];
+            document.getElementById('face-desc').innerText = faceDescs[bestIndex];
+        });
+
+        setTimeout(() => {
+            controls.dispatchEvent({ type: 'change' });
+        }, 200);
+    </script>
+</body>
+</html>
