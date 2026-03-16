@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, user-scalable=yes">
+    <title>探寻广州之春 · 花城漫游 · 花瓣随指</title>
+    <!-- 炫技1: 多字体优雅降级 + 图标库 (Font Awesome 6 免费版) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* -------------------- 重置与根变量 (炫技2: CSS自定义属性 + 动态颜色) -------------------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --spring-pink: #ffb7c5;    /* 羊城粉 */
+            --spring-green: #a8d5ba;   /* 新芽绿 */
+            --spring-yellow: #ffe194;   /* 阳光黄 */
+            --spring-clear: #ecf9f2;    /* 珠水清 */
+            --card-bg: rgba(255, 250, 240, 0.5);
+            --text-dark: #2e3b2e;
+            --shadow-soft: 0 25px 40px -12px rgba(0, 20, 10, 0.3);
+            --glass-edge: 1px solid rgba(255, 255, 255, 0.6);
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        /* 动态变量 (hover时变化) */
+        .hero:hover {
+            --spring-pink: #ffa5b8;
+            --spring-green: #9ac7a9;
+            transition: --spring-pink 0.3s, --spring-green 0.3s;
+        }
+
+        /* -------------------- 基础样式 & 炫技3: 背景混合模式 & 渐变网格 -------------------- */
+        body {
+            font-family: 'Segoe UI', 'KaiTi', 'Microsoft YaHei', system-ui, sans-serif;
+            background: linear-gradient(145deg, var(--spring-clear), #ffe6f0 80%);
+            color: var(--text-dark);
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            background-image: 
+                repeating-linear-gradient(45deg, rgba(168, 213, 186, 0.15) 0px, rgba(168, 213, 186, 0.15) 2px, transparent 2px, transparent 8px),
+                radial-gradient(circle at 30% 40%, rgba(255, 225, 148, 0.25) 0%, transparent 30%);
+        }
+
+        /* 炫技5: 毛玻璃效果通用类 */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px) saturate(180%);
+            -webkit-backdrop-filter: blur(8px) saturate(180%);
+            border-radius: 32px 16px 32px 16px;
+            border: var(--glass-edge);
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 250, 240, 0.7);
+            box-shadow: 0 35px 50px -10px rgba(210, 120, 120, 0.4);
+            transform: translateY(-8px) scale(1.01);
+            border-radius: 24px 32px 24px 32px;
+        }
+
+        /* -------------------- 布局容器 -------------------- */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 1rem 1.2rem;
+            }
+        }
+
+        /* -------------------- 炫技6: 画布粒子层 (花瓣雨) 置于底层 -------------------- */
+        #petal-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;  /* 让鼠标事件穿透，点击下层内容 */
+            z-index: 1;
+            opacity: 0.75;
+            will-change: transform;
+        }
+
+        .hero, section, footer {
+            position: relative;
+            z-index: 5;
+        }
+
+        /* -------------------- 炫技7: 标题区域 3D 文字 + 浮动动画 + 渐变文本 -------------------- */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 15vw, 6rem);
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            background: linear-gradient(135deg, #c44545, #f8a5a5, #6abf6a, #f7d794);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 10px 20px rgba(0,0,0,0.1), 0 0 40px rgba(255,230,140,0.5);
+            transform-style: preserve-3d;
+            animation: float3d 6s infinite alternate ease-in-out;
+            margin-bottom: 0.5rem;
+        }
+
+        @keyframes float3d {
+            0% { transform: perspective(600px) rotateX(2deg) rotateY(2deg) translateZ(5px); }
+            100% { transform: perspective(600px) rotateX(-2deg) rotateY(-2deg) translateZ(15px); }
+        }
+
+        .hero .sub {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            background: rgba(255,250,210,0.5);
+            backdrop-filter: blur(4px);
+            padding: 0.8rem 2rem;
+            border-radius: 60px;
+            border: 1px solid white;
+            box-shadow: 0 15px 25px -8px rgba(0,0,0,0.2);
+            margin-top: 2rem;
+            transform: rotate(-1deg);
+            transition: transform 0.3s;
+        }
+
+        .hero .sub:hover {
+            transform: rotate(0deg) scale(1.05);
+            background: rgba(255,255,255,0.75);
+        }
+
+        .wave-decoration {
+            width: 100%;
+            height: 80px;
+            background: repeating-linear-gradient( -45deg, transparent, transparent 15px, var(--spring-green) 15px, var(--spring-green) 30px );
+            mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+            -webkit-mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+            margin: 30px 0;
+        }
+
+        /* -------------------- 炫技9: 网格卡片区域 (Grid + 响应式) -------------------- */
+        .section-title {
+            font-size: 2.5rem;
+            margin: 4rem 0 2rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            right: -20px;
+            bottom: 5px;
+            height: 12px;
+            background: linear-gradient(90deg, transparent, var(--spring-pink), transparent);
+            z-index: -1;
+            border-radius: 50%;
+            filter: blur(6px);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .card {
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, var(--spring-yellow), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.6s;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .card:hover::after {
+            opacity: 0.2;
+            animation: rotateConic 4s linear infinite;
+        }
+
+        @keyframes rotateConic {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .card i {
+            font-size: 3.5rem;
+            background: linear-gradient(45deg, #c44f4f, #6f9e6f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+            filter: drop-shadow(2px 4px 6px rgba(180, 70, 70, 0.3));
+            transition: 0.2s;
+        }
+
+        .card:hover i {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            border-bottom: 3px dotted var(--spring-pink);
+            display: inline-block;
+        }
+
+        .spring-features {
+            list-style: none;
+            counter-reset: spring-counter;
+            text-align: left;
+            margin-top: 1.5rem;
+        }
+
+        .spring-features li {
+            counter-increment: spring-counter;
+            margin: 0.5rem 0;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .spring-features li::before {
+            content: counter(spring-counter, lower-roman) "🌸";
+            background: var(--spring-green);
+            color: #2d4a2d;
+            font-size: 0.9rem;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            opacity: 0.8;
+        }
+
+        /* -------------------- 炫技12: 交错滚动显示 (Intersection Observer 动效) -------------------- */
+        .fade-roll {
+            opacity: 0;
+            transform: translateY(40px) scale(0.95);
+            transition: opacity 0.9s cubic-bezier(0.2, 0.9, 0.1, 1.1), transform 0.7s ease;
+        }
+
+        .fade-roll.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+
+        @media (min-width: 769px) {
+            .tilt-card {
+                transform-style: preserve-3d;
+                transition: transform 0.2s;
+            }
+            .tilt-card:hover {
+                transform: perspective(800px) rotateX(2deg) rotateY(4deg) translateZ(10px);
+            }
+        }
+
+        /* 炫技14: 滚动指示器进度条 */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 5px;
+            background: linear-gradient(90deg, #f194b4, #8ec68e);
+            z-index: 999;
+            border-radius: 0 3px 3px 0;
+            box-shadow: 0 0 15px #f9acc7;
+            transition: width 0.1s;
+        }
+
+        /* 炫技15: 鼠标跟随光晕 (移动端忽略) */
+        .glow-spot {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle at center, rgba(255,225,148,0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2;
+            mix-blend-mode: overlay;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.2s;
+            opacity: 0.4;
+            filter: blur(20px);
+        }
+
+        @media (max-width: 640px) {
+            .hero h1 {
+                letter-spacing: 0.05em;
+            }
+            .card-grid {
+                gap: 1.2rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .glow-spot {
+                display: none;
+            }
+        }
+
+        .aspect-demo {
+            aspect-ratio: 16/9;
+            width: 100%;
+            background: rgba(255,255,240,0.3);
+            border-radius: 40px 12px 40px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        footer {
+            margin-top: 5rem;
+            padding: 2rem;
+            text-align: center;
+            border-top: 2px dashed var(--spring-green);
+            background: rgba(240,255,240,0.3);
+            backdrop-filter: blur(2px);
+        }
+
+        .text-center { text-align: center; }
+        .mt-6 { margin-top: 4rem; }
+    </style>
+</head>
+<body>
+    <!-- 炫技18: 滚动进度条 -->
+    <div id="scroll-progress"></div>
+
+    <!-- 炫技19: 鼠标跟随光晕 (JS控制) -->
+    <div class="glow-spot" id="glowSpot"></div>
+
+    <!-- 炫技核心: 花瓣画布 (canvas) 底层  本次改进：花瓣随鼠标/手指飘动-->
+    <canvas id="petal-canvas"></canvas>
+
+    <!-- 主内容 -->
+    <div class="container">
+        <!-- HERO 区 -->
+        <header class="hero fade-roll visible" style="transition-delay:0s;">
+            <h1>🌸 探寻广州之春</h1>
+            <div class="sub">
+                <i class="fas fa-map-pin"></i> 花城 · 珠江 · 早茶 · 木棉
+            </div>
+            <div class="wave-decoration"></div>
+            <p style="max-width: 700px; margin-top: 2rem; background: rgba(255,255,240,0.4); padding: 1.5rem; border-radius: 80px 20px; backdrop-filter: blur(4px);">
+                “羊城三月，木棉如火，暖风熏得游人醉。”  <br> 我们用指尖触碰春天，花瓣亦随君飘舞。
+            </p>
+        </header>
+
+        <!-- 第一部分：春之花 -->
+        <section class="fade-roll" id="spring-flower">
+            <h2 class="section-title"><i class="fas fa-seedling"></i> 花城花事 <i class="fas fa-seedling"></i></h2>
+            <div class="card-grid">
+                <div class="card glass-card tilt-card fade-roll delay-1">
+                    <i class="fas fa-tree"></i>
+                    <h3>木棉 · 英雄红</h3>
+                    <p>广州木棉三月最盛，如炬如火。落地不褪色，不萎靡，英雄花。</p>
+                    <ul class="spring-features">
+                        <li>越秀山木棉王</li>
+                        <li>陵园西路长廊</li>
+                    </ul>
+                </div>
+                <div class="card glass-card tilt-card fade-roll delay-2">
+                    <i class="fas fa-leaf"></i>
+                    <h3>紫荆 · 粉雾</h3>
+                    <p>人民北路、华农校园，紫荆烂漫，织成粉白云霞。</p>
+                    <ul class="spring-features">
+                        <li>人民北路天桥</li>
+                        <li>麓湖紫荆花道</li>
+                    </ul>
+                </div>
+                <div class="card glass-card tilt-card fade-roll delay-3">
+                    <i class="fas fa-sun-plant-wilt"></i>
+                    <h3>三角梅 · 瀑布</h3>
+                    <p>天桥、老墙上，三角梅倾泻如瀑，热烈似火。</p>
+                    <ul class="spring-features">
+                        <li>东晓南立交</li>
+                        <li>晓港公园</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第二部分：春之味 -->
+        <section class="fade-roll">
+            <h2 class="section-title"><i class="fas fa-utensils"></i> 春之味·得闲饮茶 <i class="fas fa-utensils"></i></h2>
+            <div class="aspect-demo glass-card" style="flex-direction: column; gap: 0.5rem;">
+                <p><i class="fas fa-dragon"></i> 一盅两件，春意阑珊</p>
+                <div style="display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center;">
+                    <span><i class="fas fa-shrimp"></i> 虾饺</span>
+                    <span><i class="fas fa-egg"></i> 春蛋烧卖</span>
+                    <span><i class="fas fa-mug-hot"></i> 菊花茶</span>
+                </div>
+            </div>
+            <div class="card-grid" style="margin-top: 2rem;">
+                <div class="card glass-card fade-roll delay-1">
+                    <i class="fas fa-mug-saucer"></i>
+                    <h3>得闲</h3>
+                    <p>茶楼里，一壶春茶，两件点心，窗外木棉飘落。</p>
+                </div>
+                <div class="card glass-card fade-roll delay-2">
+                    <i class="fas fa-cake-candles"></i>
+                    <h3>春艾糍</h3>
+                    <p>艾草青团，甜而不腻，春之味道。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第三部分：春之景 -->
+        <section class="fade-roll">
+            <h2 class="section-title"><i class="fas fa-mountain-sun"></i> 春之景·云山珠水</h2>
+            <div class="card-grid">
+                <div class="card glass-card tilt-card fade-roll delay-1">
+                    <i class="fas fa-water" style="mix-blend-mode: multiply;"></i>
+                    <h3>珠江夜韵</h3>
+                    <p>春江潮水连海平，海上明月共潮生。沿江漫步，暖风轻拂。</p>
+                </div>
+                <div class="card glass-card tilt-card fade-roll delay-2">
+                    <i class="fas fa-cloud-sun"></i>
+                    <h3>白云山踏青</h3>
+                    <p>桃花涧里桃花开，山泉清冽，满眼新绿。</p>
+                </div>
+                <div class="card glass-card tilt-card fade-roll delay-3">
+                    <i class="fas fa-city"></i>
+                    <h3>骑楼春光</h3>
+                    <p>恩宁路、永庆坊，老城春光透过满洲窗。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第四部分：春之韵 -->
+        <section class="fade-roll">
+            <h2 class="section-title"><i class="fas fa-dragon"></i> 广府春韵</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center;">
+                <div class="glass-card" style="padding: 2rem; max-width: 500px;">
+                    <ul class="spring-features" style="counter-reset: spring-counter 5;">
+                        <li>粤语讲古 · 木棉仔</li>
+                        <li>镬耳屋 · 春燕归巢</li>
+                        <li>扒龙舟 · 探青</li>
+                        <li>沙湾飘色 · 春色巡游</li>
+                    </ul>
+                </div>
+                <div class="glass-card" style="padding: 2rem; max-width: 300px; backdrop-filter: blur(12px);">
+                    <p><i class="fas fa-quote-right"></i> 三月三，北帝诞，醒狮采青。</p>
+                    <progress value="70" max="100" style="width:100%; height:20px; border-radius:20px;"></progress>
+                    <p>春意进度 70%</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="fade-roll">
+            <p>🌸 探寻广州之春 · 每一帧都是木棉与暖风  🌼</p>
+            <p style="display: flex; gap: 1rem; justify-content: center; font-size: 1.5rem; margin-top: 1rem;">
+                <i class="fab fa-weixin"></i> <i class="fab fa-weibo"></i> <i class="fab fa-github"></i>
+            </p>
+            <p style="opacity:0.7;">© 2025 花城春日 · 花瓣随指尖而舞</p>
+        </footer>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // -------------------- 炫技23+ : 花瓣飘落canvas + 鼠标/触摸吸引力 --------------------
+            const canvas = document.getElementById('petal-canvas');
+            const ctx = canvas.getContext('2d');
+            let width = window.innerWidth;
+            let height = window.innerHeight;
+            let petals = [];
+            const PETAL_COUNT = Math.min(65, Math.floor(width / 18));  // 自适应数量
+
+            // 吸引力坐标 (鼠标/手指)
+            let attractX = null;
+            let attractY = null;
+
+            // 事件监听：鼠标
+            window.addEventListener('mousemove', (e) => {
+                attractX = e.clientX;
+                attractY = e.clientY;
+            });
+            window.addEventListener('mouseleave', () => {
+                attractX = null;
+                attractY = null;
+            });
+
+            // 事件监听：触摸 (移动端)
+            window.addEventListener('touchstart', (e) => {
+                if (e.touches.length > 0) {
+                    attractX = e.touches[0].clientX;
+                    attractY = e.touches[0].clientY;
+                }
+            }, { passive: true });
+            window.addEventListener('touchmove', (e) => {
+                if (e.touches.length > 0) {
+                    attractX = e.touches[0].clientX;
+                    attractY = e.touches[0].clientY;
+                }
+            }, { passive: true });
+            window.addEventListener('touchend', () => {
+                attractX = null;
+                attractY = null;
+            });
+            window.addEventListener('touchcancel', () => {
+                attractX = null;
+                attractY = null;
+            });
+
+            class Petal {
+                constructor() {
+                    this.reset();
+                }
+                reset() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height - height; // 从顶部分散
+                    this.size = 8 + Math.random() * 18;       // 花瓣大小
+                    this.speedY = 1 + Math.random() * 2.2;    // 下落速度
+                    this.speedX = 0.3 - Math.random() * 0.6;   // 左右飘
+                    this.rotation = Math.random() * Math.PI * 2;
+                    this.rotateSpeed = (Math.random() - 0.5) * 0.02;
+                    this.color = `rgba(${230 + Math.random()*30}, ${140 + Math.random()*70}, ${160 + Math.random()*50}, ${0.5+Math.random()*0.3})`; // 粉红/白
+                }
+                update() {
+                    // 吸引力影响 (如果存在)
+                    if (attractX !== null && attractY !== null) {
+                        const dx = attractX - this.x;
+                        const dy = attractY - this.y;
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+                        const maxDist = 320; // 影响范围
+                        if (dist < maxDist) {
+                            // 距离越近吸引力越强，方向指向吸引点
+                            const strength = (1 - dist / maxDist) * 0.12; // 力度系数
+                            this.speedX += dx * strength * 0.0022;
+                            this.speedY += dy * strength * 0.0022;
+                        }
+                    }
+
+                    // 应用速度
+                    this.y += this.speedY;
+                    this.x += this.speedX;
+                    this.rotation += this.rotateSpeed;
+
+                    // 边界重置 (从上方重新出现)
+                    if (this.y > height + 50) {
+                        this.reset();
+                        this.y = -30;
+                    }
+                    if (this.x > width + 50) this.x = -30;
+                    if (this.x < -50) this.x = width + 30;
+
+                    // 限制最大速度，避免飞得太快
+                    const maxSpeed = 6.5;
+                    if (Math.abs(this.speedX) > maxSpeed) this.speedX = Math.sign(this.speedX) * maxSpeed;
+                    if (Math.abs(this.speedY) > maxSpeed) this.speedY = Math.sign(this.speedY) * maxSpeed;
+                }
+                draw() {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.rotation);
+                    ctx.fillStyle = this.color;
+                    // 绘制花瓣形状 (椭圆)
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size * 0.5, this.size * 0.3, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    // 加点高光
+                    ctx.fillStyle = 'rgba(255,255,240,0.2)';
+                    ctx.ellipse(-2, -2, this.size*0.15, this.size*0.1, 0, 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            function initPetals() {
+                petals = [];
+                for (let i = 0; i < PETAL_COUNT; i++) {
+                    petals.push(new Petal());
+                }
+            }
+
+            function resizeCanvas() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+                // 重置花瓣位置避免超出新边界太多
+                petals.forEach(p => {
+                    if (p.x > width) p.x = width * 0.8;
+                    if (p.y > height) p.y = height * 0.8;
+                });
+            }
+
+            function animatePetals() {
+                ctx.clearRect(0, 0, width, height);
+                petals.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(animatePetals);
+            }
+
+            initPetals();
+            resizeCanvas();
+            animatePetals();
+
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+            });
+
+            // -------------------- 炫技24: Intersection Observer 滚动显示 --------------------
+            const fadeElements = document.querySelectorAll('.fade-roll');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '20px' });
+            fadeElements.forEach(el => observer.observe(el));
+
+            // -------------------- 炫技25: 滚动进度条 --------------------
+            const progressBar = document.getElementById('scroll-progress');
+            window.addEventListener('scroll', () => {
+                const winScroll = document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                progressBar.style.width = scrolled + '%';
+            });
+
+            // -------------------- 炫技26: 鼠标跟随光晕 (glow) --------------------
+            const glow = document.getElementById('glowSpot');
+            if (glow) {
+                document.addEventListener('mousemove', (e) => {
+                    const x = e.clientX;
+                    const y = e.clientY;
+                    glow.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+                });
+                document.addEventListener('mouseleave', () => {
+                    glow.style.opacity = '0';
+                });
+                document.addEventListener('mouseenter', () => {
+                    glow.style.opacity = '0.4';
+                });
+            }
+
+            // 炫技28: 动态微调CSS变量
+            let root = document.documentElement;
+            setInterval(() => {
+                const hueShift = Math.sin(Date.now() / 2000) * 5;
+                root.style.setProperty('--spring-pink', `hsl(350, 80%, ${75 + hueShift}%)`);
+            }, 3000);
+
+            // 移动端隐藏光晕，但触摸吸引力依然工作
+            if ('ontouchstart' in window) {
+                if(glow) glow.style.display = 'none';
+            }
+        })();
+    </script>
+
+    <!-- 炫技31/32: 回退与滚动捕捉 -->
+    <style>
+        @supports not (backdrop-filter: blur(5px)) {
+            .glass-card {
+                background: rgba(255, 255, 240, 0.8);
+            }
+        }
+        .container {
+            scroll-snap-type: y proximity;
+        }
+        section {
+            scroll-snap-align: start;
+        }
+    </style>
+</body>
+</html>
