@@ -147,6 +147,7 @@
             border-bottom-color: var(--spring-pink);
             transform: translateY(-2px);
         }
+        /* 原有的 popover 样式 */
         [popover] {
             background: #ffe7db;
             border: none;
@@ -175,6 +176,41 @@
             cursor: pointer;
             font-family: var(--font-sans);
             font-size: 1rem;
+        }
+        /* 新增强制弹窗 dialog 样式，与 popover 保持一致 */
+        #welcome-dialog {
+            background: #ffe7db;
+            border: none;
+            border-radius: 60px 20px 60px 20px;
+            padding: 2rem;
+            box-shadow: 0 30px 50px #7f5a5a;
+            backdrop-filter: blur(16px);
+            font-size: 1.2rem;
+            max-width: 450px;
+            margin: auto;
+            line-height: 1.6;
+            width: 90%;
+        }
+        #welcome-dialog h3 {
+            font-family: var(--font-artistic);
+            color: #b34a4a;
+            margin-bottom: 1rem;
+        }
+        #welcome-dialog p {
+            margin-bottom: 1rem;
+        }
+        #welcome-dialog button {
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
+            background: #cfe1b9;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+        }
+        #welcome-dialog::backdrop {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
         }
         /* 英雄区域 */
         .hero {
@@ -570,6 +606,26 @@
             color: #b33a3a;
             border-bottom-color: #b33a3a;
         }
+
+        /* 新增提示小字 */
+        .sub-tip {
+            text-align: center;
+            max-width: 700px;
+            margin: 0.5rem auto 2rem;
+            background: rgba(255,250,210,0.5);
+            backdrop-filter: blur(4px);
+            padding: 0.5rem 1.5rem;
+            border-radius: 60px;
+            border: 1px solid white;
+            box-shadow: 0 10px 20px -8px rgba(0,0,0,0.1);
+            font-size: 1rem;
+            color: #2d4a2d;
+            font-weight: 500;
+        }
+        .sub-tip i {
+            margin-right: 0.5rem;
+            color: #f08080;
+        }
     </style>
 </head>
 <body>
@@ -583,7 +639,7 @@
     <!-- 导航栏 -->
     <nav>
         <div class="logo">
-            <img src="./pictures/kk春日头像.jpg" alt="kk头像" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 40 40\'%3E%3Ccircle cx=\'20\' cy=\'20\' r=\'18\' fill=\'%23ffb7c5\'/%3E%3Ctext x=\'10\' y=\'28\' font-size=\'20\' fill=\'%23ffffff\'%3Ekk%3C/text%3E%3C/svg%3E';">
+            <img src="./pictures/kk春日头像.webp" alt="kk头像" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 40 40\'%3E%3Ccircle cx=\'20\' cy=\'20\' r=\'18\' fill=\'%23ffb7c5\'/%3E%3Ctext x=\'10\' y=\'28\' font-size=\'20\' fill=\'%23ffffff\'%3Ekk%3C/text%3E%3C/svg%3E';">
             <span>kk巨献</span>
         </div>
         <div class="nav-links">
@@ -594,12 +650,27 @@
         </div>
     </nav>
 
-    <!-- popover锦囊 -->
+    <!-- 原有的 popover 锦囊（保留，供点击打开） -->
     <div id="tips-popover" popover>
         <h3>🌸 广州春日锦囊</h3>
-        <p>广州是一座名副其实的花城，一年四季繁花似锦，春日花开得更甚。在这个美好的季节，kk希望把眼中的春日美好与你共享。虽然这个网站还有一些bug，但后续kk会修复的，同时这个网站也会作为我找实习时写在简历上的一个小项目。</p>
+        <p>1.在这个美好的季节，kk希望把广州的春日美好与你共享
+        <br>
+            2.网站加载很慢，若要获得更好体验请在PC端打开此网站，并在此网站逗留足够长的时间，尤其是那个立方体要加载很久
+        <br>
+            3.这个网站也会成为我找实习时写在简历上的一个小项目</p>
         <button popovertarget="tips-popover" popovertargetaction="hide">收起</button>
     </div>
+
+    <!-- 新增强制弹窗（页面加载时自动显示，但仅一次） -->
+    <dialog id="welcome-dialog">
+        <h3>🌸 广州春日锦囊</h3>
+        <p>1.在这个美好的季节，kk希望把广州的春日美好与你共享
+        <br>
+            2.网站加载很慢，若要获得更好体验请在PC端打开此网站，并在此网站逗留足够长的时间，尤其是那个立方体要加载很久
+        <br>
+            3.这个网站也会成为我找实习时写在简历上的一个小项目</p>
+        <button onclick="document.getElementById('welcome-dialog').close()">收起</button>
+    </dialog>
 
     <!-- 英雄区 -->
     <section class="hero">
@@ -647,6 +718,8 @@
         <!-- 云山珠水 (带轮播图的卡片) -->
         <section class="fade-roll" id="yunshan">
             <h2 class="section-title"><i class="fas fa-water"></i> 云山珠水 <i class="fas fa-water"></i></h2>
+            <!-- 新增提示小字 -->
+            <div class="sub-tip"><i class="fas fa-info-circle"></i> 移动端请点击四张卡片图片文字外的空白处跳转详情页，PC网页端点击卡片任意处均可跳转详情页。这是bug，我尽量修</div>
             <div class="card-grid" id="yunshan-grid">
                 <!-- 卡片1 - 珠江夜韵 轮播 -->
                 <div class="card glass-card carousel-card" data-detail="zjy_detail.html">
@@ -662,13 +735,13 @@
                             </div>
                             <div class="carousel-slide" data-href="zjy_detail.html#pic2">
                                 <div class="image-container">
-                                    <img src="./pictures/珠江夜韵2.jpg" alt="珠江夜韵2" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23b3e0c9\'/%3E%3Ctext x=\'80\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌉%3C/text%3E%3C/svg%3E';">
+                                    <img src="./pictures/珠江夜韵2.jpg" loading="lazy" alt="珠江夜韵2" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23b3e0c9\'/%3E%3Ctext x=\'80\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌉%3C/text%3E%3C/svg%3E';">
                                 </div>
                                 <div class="slide-caption">海心桥上摆了很多花，在晚上我看不太清，凑近嘀咕：这花真的假的？一旁的阿姨马上接话：肯定系真噶啦，唔系噶话广州点会叫做花城呢</div>
                             </div>
                             <div class="carousel-slide" data-href="zjy_detail.html#pic3">
                                 <div class="image-container">
-                                    <img src="./pictures/珠江夜韵3.jpg" alt="珠江夜韵3" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23ffe5b3\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🚢%3C/text%3E%3C/svg%3E';">
+                                    <img src="./pictures/珠江夜韵3.jpg" loading="lazy" alt="珠江夜韵3" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23ffe5b3\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🚢%3C/text%3E%3C/svg%3E';">
                                 </div>
                                 <div class="slide-caption">灯光璀璨，夜色温柔。如果运气好，你能在珠江边看到eason的粉丝自发聚集起来歌唱，这时候就去和他们一起吹着江风唱唱歌吧！</div>
                             </div>
@@ -694,13 +767,13 @@
                             </div>
                             <div class="carousel-slide" data-href="shamian_detail.html#pic2">
                                 <div class="image-container">
-                                    <img src="./pictures/沙面2.jpg" alt="沙面2" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23b3e0c9\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌳%3C/text%3E%3C/svg%3E';">
+                                    <img src="./pictures/沙面2.jpg" loading="lazy" alt="沙面2"  onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23b3e0c9\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌳%3C/text%3E%3C/svg%3E';">
                                 </div>
                                 <div class="slide-caption">枝叶向上伸展，夕阳刺破枝叶，我觉得这张拍得很有生命力哦</div>
                             </div>
                             <div class="carousel-slide" data-href="shamian_detail.html#pic3">
                                 <div class="image-container">
-                                    <img src="./pictures/沙面3.jpg" alt="沙面3" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23ffe5b3\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E☕%3C/text%3E%3C/svg%3E';">
+                                    <img src="./pictures/沙面3.webp" loading="lazy" alt="沙面3" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23ffe5b3\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E☕%3C/text%3E%3C/svg%3E';">
                                 </div>
                                 <div class="slide-caption">沙面是一个花团锦簇，浪漫典雅的地方，在kk心里这里是广州citywalk的天花板！</div>
                             </div>
@@ -726,13 +799,13 @@
                             </div>
                             <div class="carousel-slide" data-href="hz_detail.html#pic2">
                                 <div class="image-container">
-                                    <img src="./pictures/海珠湖春景2.jpg" alt="海珠湖春景2" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23b3e0c9\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌸%3C/text%3E%3C/svg%3E';">
+                                    <img src="./pictures/海珠湖春景2.webp" loading="lazy" alt="海珠湖春景2" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23b3e0c9\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌸%3C/text%3E%3C/svg%3E';">
                                 </div>
                                 <div class="slide-caption">每当一批花花期过了，市政府会立刻补种，kk也还没有见过粉色的花海呢</div>
                             </div>
                             <div class="carousel-slide" data-href="hz_detail.html#pic3">
                                 <div class="image-container">
-                                    <img src="./pictures/海珠湖春景3.jpg" alt="海珠湖春景3" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23ffe5b3\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌿%3C/text%3E%3C/svg%3E';">
+                                    <img src="./pictures/海珠湖春景3.webp" loading="lazy" alt="海珠湖春景3" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23ffe5b3\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌿%3C/text%3E%3C/svg%3E';">
                                 </div>
                                 <div class="slide-caption">海珠湖公园里，花随处可见，开得跟不要钱似的！</div>
                             </div>
@@ -752,19 +825,19 @@
                         <div class="carousel-track">
                             <div class="carousel-slide" data-href="tram_detail.html#pic1">
                                 <div class="image-container">
-                                    <img src="./pictures/有轨电车1.jpg" alt="有轨电车1" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23f7c5a8\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🚋%3C/text%3E%3C/svg%3E';">
+                                    <img src="./pictures/有轨电车1.webp" alt="有轨电车1" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23f7c5a8\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🚋%3C/text%3E%3C/svg%3E';">
                                 </div>
                                 <div class="slide-caption">广州的有轨电车就像穿行在花的隧道</div>
                             </div>
                             <div class="carousel-slide" data-href="tram_detail.html#pic2">
                                 <div class="image-container">
-                                    <img src="./pictures/有轨电车2.jpg" alt="有轨电车2" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23b3e0c9\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌺%3C/text%3E%3C/svg%3E';">
+                                    <img src="./pictures/有轨电车2.jpg" loading="lazy" alt="有轨电车2" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23b3e0c9\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌺%3C/text%3E%3C/svg%3E';">
                                 </div>
                                 <div class="slide-caption">隔江相望的是天河CBD</div>
                             </div>
                             <div class="carousel-slide" data-href="tram_detail.html#pic3">
                                 <div class="image-container">
-                                    <img src="./pictures/有轨电车3.jpg" alt="有轨电车3" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23ffe5b3\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌆%3C/text%3E%3C/svg%3E';">
+                                    <img src="./pictures/有轨电车3.jpg" loading="lazy" alt="有轨电车3" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23ffe5b3\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌆%3C/text%3E%3C/svg%3E';">
                                 </div>
                                 <div class="slide-caption">嗯，高楼，珠江，花，这些元素都很和谐</div>
                             </div>
@@ -1133,6 +1206,16 @@
                     window.location.href = href;
                 }
             });
+        });
+
+        // ---------- 强制弹窗：仅在第一次加载页面时显示，不重复弹出 ----------
+        window.addEventListener('load', () => {
+            const dialog = document.getElementById('welcome-dialog');
+            // 检查 sessionStorage 中是否已经有标记
+            if (dialog && !sessionStorage.getItem('welcomeShown')) {
+                dialog.showModal();
+                sessionStorage.setItem('welcomeShown', 'true');
+            }
         });
 
         // ---------- Three.js 立方体 ----------

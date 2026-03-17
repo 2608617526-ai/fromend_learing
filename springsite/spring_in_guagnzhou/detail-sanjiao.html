@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>木棉/黄风铃 · 花城春日</title>
+    <title>三角瀑布 · 花城春日</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* 与主页面样式一致 (为了简洁，此处保留核心样式，实际项目可抽离公共CSS) */
@@ -21,12 +21,55 @@
         .detail-header h2 { font-size: 3.5rem; background: linear-gradient(135deg,#c44545,#f8a5a5,#6abf6a); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .section-title { font-size: 2.5rem; margin: 4rem 0 2rem; position: relative; display: inline-block; left:50%; transform: translateX(-50%); white-space: nowrap; }
         .section-title::before { content:''; position:absolute; left:-20px; right:-20px; bottom:5px; height:12px; background: linear-gradient(90deg, transparent, var(--spring-pink), transparent); z-index:-1; border-radius:50%; filter:blur(6px); }
-        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0; }
-        .card { padding: 2rem; text-align: center; position: relative; overflow: hidden; }
+        .card-grid { 
+            display: grid; 
+            /* 优化：减小最小宽度，使其更适应移动端 */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 2rem; 
+            margin: 3rem 0; 
+        }
+        @media (max-width:640px) {
+            .card-grid {
+                gap: 1rem;
+            }
+        }
+        .card { 
+            padding: 2rem; 
+            text-align: center; 
+            position: relative; 
+            overflow: hidden; 
+            word-wrap: break-word; /* 防止长文字溢出 */
+        }
+        @media (max-width:640px) {
+            .card {
+                padding: 1.2rem;
+            }
+        }
         .card i { font-size: 3rem; margin-bottom: 1rem; color: #c44f4f; }
         .card h3 { font-size: 2rem; margin-bottom: 1rem; border-bottom: 3px dotted var(--spring-pink); display: inline-block; }
-        .media-placeholder { background: rgba(0,0,0,0.03); border-radius: 24px; padding: 2rem; margin: 1.5rem 0; border: 2px dashed var(--spring-green); }
+        
+        /* 优化：媒体占位符样式 */
+        .media-card { 
+            /* 移除 grid-column: span 3; 以使图片卡片独立占据一列 */
+            grid-column: auto !important; 
+        }
+        .media-placeholder { 
+            background: rgba(0,0,0,0.03); 
+            border-radius: 24px; 
+            padding: 2rem; 
+            margin: 1.5rem 0; 
+            border: 2px dashed var(--spring-green);
+            max-width: 100%;
+            overflow: hidden; /* 确保内容不溢出 */
+            width: 100%; /* 确保占满其网格单元格 */
+        }
         .media-placeholder p { color: #5f7e5f; } .media-placeholder i { font-size: 3rem; color: var(--spring-pink); }
+        .media-placeholder img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 16px;
+        }
         .fade-roll { opacity:0; transform:translateY(40px) scale(0.95); transition: opacity 0.9s cubic-bezier(0.2,0.9,0.1,1.1), transform 0.7s ease; }
         .fade-roll.visible { opacity:1; transform:translateY(0) scale(1); }
         .delay-1 { transition-delay:0.1s; } .delay-2 { transition-delay:0.2s; }
@@ -36,6 +79,16 @@
         footer { margin-top:5rem; padding:2rem; text-align:center; border-top:2px dashed var(--spring-green); background:rgba(240,255,240,0.3); backdrop-filter:blur(2px); }
         /* 锚点偏移补偿，避免固定标题挡住内容 */
         .anchor-offset { scroll-margin-top: 80px; }
+
+        /* 移动端优化：减小内边距，图片圆角微调 */
+        @media (max-width: 640px) {
+            .media-placeholder {
+                padding: 1rem;
+            }
+            .media-placeholder img {
+                border-radius: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -54,22 +107,22 @@
             <h3 class="section-title">东晓南立交</h3>
             <div class="card-grid">
                 <div class="card glass-card"><i class="fas fa-landmark"></i><h4>📍 地点简介</h4><p>东晓南立交桥两侧三角梅如瀑布倾泻，是广州著名网红打卡点。</p></div>
-                <!-- 原图片预留位，现插入图片 -->
-                <div class="card glass-card media-placeholder">
-                    <img src="./pictures/三角梅1.jpg" alt="三角梅1" style="width:100%; height:auto; border-radius:16px;" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23f7c5a8\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌺%3C/text%3E%3C/svg%3E';">
-                    
+                
+                <!-- 将图片卡片放入网格中，不再独占3列 -->
+                <div class="card glass-card media-card media-placeholder">
+                    <img src="./pictures/三角梅1.webp" alt="三角梅1" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23f7c5a8\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌺%3C/text%3E%3C/svg%3E';">
                 </div>
-                <!-- 原视频预留位，现插入图片 -->
-                <div class="card glass-card media-placeholder">
-                    <img src="./pictures/三角梅2.jpg" alt="三角梅2" style="width:100%; height:auto; border-radius:16px;" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23b3e0c9\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌺%3C/text%3E%3C/svg%3E';">
-                    
+                
+                <div class="card glass-card media-card media-placeholder">
+                    <img src="./pictures/三角梅2.webp" alt="三角梅2" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23b3e0c9\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌺%3C/text%3E%3C/svg%3E';">
                 </div>
-                <div class="card glass-card" style="grid-column: span 3;"><p>东晓南立交的三角梅每年3月最盛，绵延数公里，仿佛彩色绸带。</p></div>
+                
+                <!-- 描述信息也作为一个独立的卡片 -->
+                <div class="card glass-card">
+                    <p>东晓南立交的三角梅每年3月最盛，绵延数公里，仿佛彩色绸带。</p>
+                </div>
             </div>
         </section>
-
-        <!-- 地点2：洲头咀 (锚点 zhoutouzui) -->
-       
 
         <footer class="fade-roll">
             <p>🌸 花城春日 · 三角梅·瀑布  🌼</p>
