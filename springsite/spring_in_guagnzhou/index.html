@@ -147,6 +147,22 @@
             border-bottom-color: var(--spring-pink);
             transform: translateY(-2px);
         }
+        /* 音乐按钮特殊样式 */
+        .music-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .music-btn i {
+            transition: transform 0.3s linear;
+        }
+        .music-btn.playing i {
+            animation: spin 4s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
         /* 原有的 popover 样式 */
         [popover] {
             background: #ffe7db;
@@ -646,30 +662,41 @@
             <a href="#spring-flower"><i class="fas fa-seedling"></i> 花城掠影</a>
             <a href="#yunshan"><i class="fas fa-water"></i> 云山珠水</a>
             <a href="#jnu"><i class="fas fa-university"></i> 暨南的春</a>
+            <!-- 音乐CD按钮，放在暨南的春和锦囊之间 -->
+            <button id="music-toggle" class="music-btn"><i class="fas fa-compact-disc"></i></button>
             <button popovertarget="tips-popover"><i class="fas fa-info-circle"></i> 锦囊</button>
         </div>
     </nav>
 
+    <!-- 音频元素，只在本页有效 -->
+    <audio id="bg-music" loop preload="metadata">
+        <source src="./pictures/春之歌.mp3" type="audio/mpeg">
+        您的浏览器不支持音频元素。
+    </audio>
+
     <!-- 原有的 popover 锦囊（保留，供点击打开） -->
     <div id="tips-popover" popover>
         <h3>🌸 广州春日锦囊</h3>
-        <p>1.在这个美好的季节，kk希望把广州的春日美好与你共享
+        <p>1.在这个繁花似锦的季节，kk希望把广州的春日美好与你共享
         <br>
             2.网站加载很慢，若要获得更好体验请在PC端打开此网站，并在此网站逗留足够长的时间，尤其是那个立方体要加载很久
         <br>
-            3.这个网站也会成为我找实习时写在简历上的一个小项目</p>
+            3.移动端请复制网址用浏览器打开以获得更佳体验
+        </p>
         <button popovertarget="tips-popover" popovertargetaction="hide">收起</button>
     </div>
 
     <!-- 新增强制弹窗（页面加载时自动显示，但仅一次） -->
     <dialog id="welcome-dialog">
         <h3>🌸 广州春日锦囊</h3>
-        <p>1.在这个美好的季节，kk希望把广州的春日美好与你共享
+        <p>1.在这个繁花似锦的季节，kk希望把广州的春日美好与你共享
         <br>
-            2.网站加载很慢，若要获得更好体验请在PC端打开此网站，并在此网站逗留足够长的时间，尤其是那个立方体要加载很久
+            2.网站加载很慢，若要获得最佳体验请在PC端打开此网站，并在此网站逗留足够长的时间，尤其是那个立方体要加载很久
         <br>
-            3.这个网站也会成为我找实习时写在简历上的一个小项目</p>
-        <button onclick="document.getElementById('welcome-dialog').close()">收起</button>
+            3.移动端请复制网址用浏览器打开以获得更佳体验
+        <br>
+            4.点击收起，自动播放门德尔松《春之歌》（加载可能有延迟）</p>
+        <button id="close-welcome-dialog">收起</button>
     </dialog>
 
     <!-- 英雄区 -->
@@ -696,7 +723,7 @@
                 </div>
                 <div class="card glass-card tilt-card fade-roll delay-2">
                     <i class="fas fa-leaf"></i>
-                    <h3>紫荆</h3>
+                   <h3>紫荆</h3>
                     <p>粉白相间，落英缤纷，校园与湖畔的春日浪漫。</p>
                     <ul class="spring-features">
                         <li><a href="detail-zijing.html#zhongxinhu" target="_self">大学城中心湖公园</a></li>
@@ -878,6 +905,15 @@
     </div>
 
     <script type="module">
+        // ---------- 强制弹窗：在模块加载后立即显示，不重复弹出 ----------
+        (function() {
+            const dialog = document.getElementById('welcome-dialog');
+            if (dialog && !sessionStorage.getItem('welcomeShown')) {
+                dialog.showModal();
+                sessionStorage.setItem('welcomeShown', 'true');
+            }
+        })();
+
         // ---------- 花瓣效果 ----------
         (function() {
             const canvas = document.getElementById('petal-canvas');
@@ -1208,15 +1244,52 @@
             });
         });
 
-        // ---------- 强制弹窗：仅在第一次加载页面时显示，不重复弹出 ----------
-        window.addEventListener('load', () => {
-            const dialog = document.getElementById('welcome-dialog');
-            // 检查 sessionStorage 中是否已经有标记
-            if (dialog && !sessionStorage.getItem('welcomeShown')) {
-                dialog.showModal();
-                sessionStorage.setItem('welcomeShown', 'true');
+        // ---------- 音乐控制 ----------
+        const music = document.getElementById('bg-music');
+        const musicBtn = document.getElementById('music-toggle');
+        let isMusicPlaying = false;
+
+        // 尝试播放音乐（在用户手势下调用）
+        function playMusic() {
+            if (music.paused) {
+                music.play().then(() => {
+                    isMusicPlaying = true;
+                    musicBtn.classList.add('playing');
+                }).catch(e => console.log('播放失败:', e));
             }
-        });
+        }
+
+        // 暂停音乐
+        function pauseMusic() {
+            music.pause();
+            isMusicPlaying = false;
+            musicBtn.classList.remove('playing');
+        }
+
+        // 切换播放状态
+        function toggleMusic() {
+            if (music.paused) {
+                playMusic();
+            } else {
+                pauseMusic();
+            }
+        }
+
+        // 点击音乐按钮切换
+        musicBtn.addEventListener('click', toggleMusic);
+
+        // 处理强制弹窗的关闭按钮，关闭后尝试播放音乐
+        const closeDialogBtn = document.getElementById('close-welcome-dialog');
+        if (closeDialogBtn) {
+            closeDialogBtn.addEventListener('click', function() {
+                const dialog = document.getElementById('welcome-dialog');
+                if (dialog) {
+                    dialog.close();
+                }
+                // 关闭弹窗后播放音乐（如果尚未播放）
+                playMusic();
+            });
+        }
 
         // ---------- Three.js 立方体 ----------
         import * as THREE from 'three';
