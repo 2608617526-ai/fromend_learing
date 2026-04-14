@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>木棉/黄风铃 · 花城春日</title>
+    <!-- Font Awesome 6 (免费图标库) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ========== 全局重置 & 设计变量 ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --spring-pink: #ffb7c5;
+            --spring-green: #a8d5ba;
+            --spring-yellow: #ffe194;
+            --spring-clear: #ecf9f2;
+            --card-bg: rgba(255, 250, 240, 0.5);
+            --text-dark: #2e3b2e;
+            --shadow-soft: 0 25px 40px -12px rgba(0, 20, 10, 0.3);
+            --glass-edge: 1px solid rgba(255, 255, 255, 0.6);
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        /* ----- 基础主体样式（柔和春日渐变 + 装饰纹理）----- */
+        body {
+            font-family: 'Segoe UI', 'KaiTi', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(145deg, var(--spring-clear), #ffe6f0 80%);
+            color: var(--text-dark);
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;          /* 防止横向滚动条 */
+            background-image: repeating-linear-gradient(45deg, rgba(168, 213, 186, 0.15) 0px, rgba(168, 213, 186, 0.15) 2px, transparent 2px, transparent 8px),
+                              radial-gradient(circle at 30% 40%, rgba(255, 225, 148, 0.25) 0%, transparent 30%);
+        }
+
+        /* ========== 玻璃质感卡片（毛玻璃效果） ========== */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px) saturate(180%);
+            -webkit-backdrop-filter: blur(8px) saturate(180%);
+            border-radius: 32px 16px 32px 16px;
+            border: var(--glass-edge);
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 250, 240, 0.7);
+            box-shadow: 0 35px 50px -10px rgba(210, 120, 120, 0.4);
+            transform: translateY(-8px) scale(1.01);
+            border-radius: 24px 32px 24px 32px;
+        }
+
+        /* ========== 主容器 ========== */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ========== 返回首页按钮 ========== */
+        .back-home {
+            display: inline-block;
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            border: 2px solid var(--spring-green);
+            padding: 0.5rem 1.5rem;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+            transition: 0.3s;
+        }
+
+        .back-home i {
+            margin-right: 8px;
+        }
+
+        .back-home:hover {
+            background: var(--spring-green);
+            color: #1f3a1f;
+        }
+
+        /* ========== 头部标题区 ========== */
+        .detail-header {
+            text-align: center;
+            margin: 4rem 0 3rem;
+        }
+
+        .detail-header h2 {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, #c44545, #f8a5a5, #6abf6a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* ========== 章节标题装饰 ========== */
+        .section-title {
+            font-size: 2.5rem;
+            margin: 4rem 0 2rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            right: -20px;
+            bottom: 5px;
+            height: 12px;
+            background: linear-gradient(90deg, transparent, var(--spring-pink), transparent);
+            z-index: -1;
+            border-radius: 50%;
+            filter: blur(6px);
+        }
+
+        /* ========== 卡片网格布局 ========== */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        /* 单个卡片样式 */
+        .card {
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            word-wrap: break-word;
+        }
+
+        .card i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #c44f4f;
+        }
+
+        .card h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 3px dotted var(--spring-pink);
+            display: inline-block;
+        }
+
+        /* 图片/媒体占位卡片 (独立网格项) */
+        .media-card {
+            grid-column: auto !important;
+        }
+
+        .media-placeholder {
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 24px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            border: 2px dashed var(--spring-green);
+            max-width: 100%;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .media-placeholder p {
+            color: #5f7e5f;
+        }
+
+        .media-placeholder i {
+            font-size: 3rem;
+            color: var(--spring-pink);
+        }
+
+        .media-placeholder img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 16px;
+        }
+
+        /* ========== 滚动入场动画 (fade + 上移) ========== */
+        .fade-roll {
+            opacity: 0;
+            transform: translateY(40px) scale(0.95);
+            transition: opacity 0.9s cubic-bezier(0.2, 0.9, 0.1, 1.1), transform 0.7s ease;
+        }
+
+        .fade-roll.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .delay-1 {
+            transition-delay: 0.1s;
+        }
+
+        .delay-2 {
+            transition-delay: 0.2s;
+        }
+
+        /* ========== 滚动进度条 ========== */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 5px;
+            background: linear-gradient(90deg, #f194b4, #8ec68e);
+            z-index: 999;
+            border-radius: 0 3px 3px 0;
+        }
+
+        /* ========== 跟随鼠标的柔和光晕 ========== */
+        .glow-spot {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle at center, rgba(255, 225, 148, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2;
+            mix-blend-mode: overlay;
+            transform: translate(-50%, -50%);
+            opacity: 0.4;
+            filter: blur(20px);
+        }
+
+        /* ========== 页脚样式 ========== */
+        footer {
+            margin-top: 5rem;
+            padding: 2rem;
+            text-align: center;
+            border-top: 2px dashed var(--spring-green);
+            background: rgba(240, 255, 240, 0.3);
+            backdrop-filter: blur(2px);
+        }
+
+        /* 锚点偏移补偿（固定标题不遮挡内容） */
+        .anchor-offset {
+            scroll-margin-top: 80px;
+        }
+
+        /* ========== 响应式移动端优化（合并所有移动端适配，保持与原表现一致） ========== */
+        @media (max-width: 640px) {
+            .container {
+                padding: 1rem 1.2rem;
+            }
+
+            .card-grid {
+                gap: 1rem;
+            }
+
+            .card {
+                padding: 1.2rem;
+            }
+
+            .glow-spot {
+                display: none;      /* 移动端隐藏光晕效果，提升性能 */
+            }
+
+            .media-placeholder {
+                padding: 1rem;
+            }
+
+            .media-placeholder img {
+                border-radius: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 滚动进度条指示器 -->
+    <div id="scroll-progress"></div>
+    <!-- 跟随鼠标的光晕装饰 -->
+    <div class="glow-spot"></div>
+    <!-- 花瓣飘落画布（背景动画） -->
+    <canvas id="petal-canvas"></canvas>
+
+    <div class="container">
+        <!-- 返回首页链接 -->
+        <a href="index.html" class="back-home glass-card">
+            <i class="fas fa-arrow-left"></i> 返回首页
+        </a>
+
+        <!-- 页面主标题区域 -->
+        <div class="detail-header fade-roll visible">
+            <h2>🌺 木棉 & 黄风铃</h2>
+            <p style="font-size:1.3rem; max-width:700px; margin:1rem auto;">木棉似火，风铃如金，交织羊城春日</p>
+        </div>
+
+        <!-- 地点1：农讲所 · 百年木棉 -->
+        <section id="nongjiangsuo" class="fade-roll delay-1 anchor-offset">
+            <h3 class="section-title">农讲所 · 木棉</h3>
+            <div class="card-grid">
+                <!-- 介绍卡片：地点特色 -->
+                <div class="card glass-card">
+                    <i class="fas fa-landmark"></i>
+                    <h4>📍 地点简介</h4>
+                    <p>农讲所旧址内有一株百年木棉，花开时红墙映红花，极具历史韵味。</p>
+                </div>
+                <!-- 图片卡片 1：木棉实拍占位 -->
+                <div class="card glass-card media-card media-placeholder">
+                    <img src="./pictures/木棉1.jpg" alt="农讲所木棉花特写" 
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23f7c5a8\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌺%3C/text%3E%3C/svg%3E';">
+                </div>
+                <!-- 图片卡片 2：木棉与建筑相映 -->
+                <div class="card glass-card media-card media-placeholder">
+                    <img src="./pictures/木棉2.webp" alt="红墙木棉相映" 
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23b3e0c9\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌺%3C/text%3E%3C/svg%3E';">
+                </div>
+                <!-- 补充描述卡片 -->
+                <div class="card glass-card">
+                    <p>农讲所（毛泽东同志主办农民运动讲习所旧址）是广州著名红色景点，院内木棉每年三月盛开，与古建筑相映成辉。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 地点2：洲头咀 · 黄风铃花海 -->
+        <section id="zhoutouzui" class="fade-roll delay-2 anchor-offset">
+            <h3 class="section-title">洲头咀 · 黄风铃花海</h3>
+            <div class="card-grid">
+                <!-- 地点简介卡片 -->
+                <div class="card glass-card">
+                    <i class="fas fa-tree"></i>
+                    <h4>📍 地点简介</h4>
+                    <p>洲头咀公园附近街道种植大量黄风铃木，春天金黄一片，如童话世界。</p>
+                </div>
+                <!-- 黄风铃图片卡片 1 -->
+                <div class="card glass-card media-card media-placeholder">
+                    <img src="./pictures/黄花风铃木1.webp" alt="黄风铃木盛开" 
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23f7c5a8\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌼%3C/text%3E%3C/svg%3E';">
+                </div>
+                <!-- 黄风铃图片卡片 2 -->
+                <div class="card glass-card media-card media-placeholder">
+                    <img src="./pictures/黄花风铃木2.webp" alt="环岛路黄风铃花道" 
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23ffe5b3\'/%3E%3Ctext x=\'120\' y=\'160\' font-size=\'40\' fill=\'%23ffffff\'%3E🌼%3C/text%3E%3C/svg%3E';">
+                </div>
+                <!-- 花季资讯描述卡片 -->
+                <div class="card glass-card">
+                    <p>洲头咀的黄风铃木集中在环岛路，花期约两周，是近年广州春日热门打卡地。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 页脚区域 -->
+        <footer class="fade-roll">
+            <p>🌸 花城春日 · 木棉与黄风铃  🌼</p>
+            <p><a href="index.html" style="color: var(--text-dark);">返回首页</a></p>
+        </footer>
+    </div>
+
+    <script>
+        (function() {
+            /* ================================================================
+               模块1: 飘落花瓣动画 (Canvas)
+               效果：动态生成花瓣，跟随鼠标/触摸产生轻微吸引效果
+            ================================================================ */
+            const canvas = document.getElementById('petal-canvas');
+            const ctx = canvas.getContext('2d');
+            let width = window.innerWidth;
+            let height = window.innerHeight;
+            let petals = [];
+            // 根据屏幕宽度调整花瓣数量（避免过多消耗性能）
+            const PETAL_COUNT = Math.min(60, Math.floor(width / 18));
+            let attractX = null;
+            let attractY = null;
+
+            // 鼠标/触摸交互：吸引点坐标
+            window.addEventListener('mousemove', (e) => {
+                attractX = e.clientX;
+                attractY = e.clientY;
+            });
+            window.addEventListener('mouseleave', () => {
+                attractX = null;
+                attractY = null;
+            });
+            window.addEventListener('touchstart', (e) => {
+                if (e.touches.length) {
+                    attractX = e.touches[0].clientX;
+                    attractY = e.touches[0].clientY;
+                }
+            });
+            window.addEventListener('touchmove', (e) => {
+                if (e.touches.length) {
+                    attractX = e.touches[0].clientX;
+                    attractY = e.touches[0].clientY;
+                }
+            });
+            window.addEventListener('touchend', () => {
+                attractX = null;
+                attractY = null;
+            });
+
+            // 花瓣类定义
+            class Petal {
+                constructor() {
+                    this.reset();
+                }
+                reset() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height - height;   // 从画布上方之外开始
+                    this.size = 8 + Math.random() * 16;
+                    this.speedY = 0.5 + Math.random() * 1.2;
+                    this.speedX = 0.2 - Math.random() * 0.4;
+                    this.rotation = Math.random() * Math.PI * 2;
+                    this.rotateSpeed = (Math.random() - 0.5) * 0.015;
+                    this.color = `rgba(${230 + Math.random() * 30}, ${140 + Math.random() * 70}, ${160 + Math.random() * 50}, ${0.6 + Math.random() * 0.3})`;
+                }
+                update() {
+                    // 鼠标/触摸吸引力逻辑（范围内产生偏移）
+                    if (attractX !== null && attractY !== null) {
+                        const dx = attractX - this.x;
+                        const dy = attractY - this.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 400) {
+                            const strength = (1 - dist / 400) * 0.25;
+                            this.speedX += dx * strength * 0.002;
+                            this.speedY += dy * strength * 0.002;
+                        }
+                    }
+                    // 位置更新
+                    this.y += this.speedY;
+                    this.x += this.speedX;
+                    this.rotation += this.rotateSpeed;
+                    // 边界重置（超出画面则重置到顶部）
+                    if (this.y > height + 50) {
+                        this.reset();
+                        this.y = -30;
+                    }
+                    if (this.x > width + 50) this.x = -30;
+                    if (this.x < -50) this.x = width + 30;
+                    // 限制速度上限
+                    if (Math.abs(this.speedX) > 4) this.speedX = Math.sign(this.speedX) * 4;
+                    if (Math.abs(this.speedY) > 4) this.speedY = Math.sign(this.speedY) * 4;
+                }
+                draw() {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.rotation);
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size * 0.5, this.size * 0.3, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    // 添加高光小点，增加层次感
+                    ctx.fillStyle = 'rgba(255,255,240,0.2)';
+                    ctx.ellipse(-2, -2, this.size * 0.15, this.size * 0.1, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            // 初始化花瓣数组
+            function initPetals() {
+                petals = [];
+                for (let i = 0; i < PETAL_COUNT; i++) {
+                    petals.push(new Petal());
+                }
+            }
+
+            // 画布尺寸自适应
+            function resizeCanvas() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+            }
+
+            // 动画循环
+            function animatePetals() {
+                ctx.clearRect(0, 0, width, height);
+                petals.forEach(petal => {
+                    petal.update();
+                    petal.draw();
+                });
+                requestAnimationFrame(animatePetals);
+            }
+
+            // 启动花瓣效果
+            initPetals();
+            resizeCanvas();
+            animatePetals();
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                // 重置所有花瓣，适应新尺寸
+                initPetals();
+            });
+
+            /* ================================================================
+               模块2: 滚动视差入场动画 (Intersection Observer)
+               说明: 监测 .fade-roll 元素，进入视口时添加 visible 类
+            ================================================================ */
+            const fadeElements = document.querySelectorAll('.fade-roll');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.15 });   // 元素露出15%即触发动画
+            fadeElements.forEach(el => observer.observe(el));
+
+            /* ================================================================
+               模块3: 顶部滚动进度条
+               根据滚动百分比改变进度条宽度
+            ================================================================ */
+            const progressBar = document.getElementById('scroll-progress');
+            window.addEventListener('scroll', () => {
+                const winScroll = document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrollPercent = (winScroll / height) * 100;
+                progressBar.style.width = scrollPercent + '%';
+            });
+
+            /* ================================================================
+               模块4: 光晕跟随鼠标（桌面端优雅跟随）
+               移动端自动隐藏，节省性能
+            ================================================================ */
+            const glowSpot = document.querySelector('.glow-spot');
+            if (glowSpot) {
+                document.addEventListener('mousemove', (e) => {
+                    glowSpot.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+                });
+            }
+            // 如果是触摸屏设备，隐藏光晕效果（原设计已通过媒体查询做了display:none，但额外加一层保障）
+            if ('ontouchstart' in window) {
+                if (glowSpot) glowSpot.style.display = 'none';
+            }
+        })();
+    </script>
+</body>
+</html>

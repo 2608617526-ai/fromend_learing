@@ -1,17 +1,18 @@
         /* 当css文件控制多个网页时，浏览器只需要缓存一份，
         因而可以可以提高网页的访问速度，实现结构和样式的分离使得结构更加清晰。
-        实际开发均使用外部样式 */
+        实际开发均使用外部样式
+        优先级当然是从内到外 */
         h1{
             color:green;
-            font: size 100px;
+            font-size: size 100px;
         }
         h2{
             color:aqua;
-            font: 400;
+            font-size: 90px;
         }
         p{
             color:blueviolet;
-            font:caption;
+            font-size:caption;
         }
         /* 这个可以控制全部的p标签 */
         img{

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>后代选择器</title>
+    <!-- 适合层级嵌套的场景，比如列表，表格啥的吧 -->
+    <style>
+        /* 只需要用逗号隔开，就可以 */
+        ul li{
+            color:aqua;
+        }
+        ol li{
+            color:brown;
+            font-size: medium;
+        }
+    </style>
+</head>
+<body>
+	<ul>
+        <li>将进酒</li>
+        <li>滕王阁序</li>
+        <li>
+            <a href="#">春夜喜雨</a>
+        </li>
+    </ul>
+    <ol>
+        <li>李白</li>
+        <li>王勃</li>
+        <li>杜甫</li>
+    </ol>
+</body>
+</html>
