@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+		/* 子代选择器，只选中它的儿子。而后代选择器会选中所有后代，不管它嵌套有多么深 */
+		.kk>a{
+			color:brown
+		}
+		/* 4是棕色，这说明类选择器比元素选择器高级，搭配起来也是一样 */
+		div>a{
+			color:red;
+		}
+		/* 这个会对所有的div起作用 */
+		div>p>a{
+			color:green;
+		}
+		
+	</style>
+</head>
+<body>
+	<div>
+		<a href="#">1</a>
+		<a href="#">2</a>
+		<a href="#">3</a>
+		<p>
+			<a href="#">4</a>
+			<div class="kk">
+				<a>4</a>
+			</div>
+		</p>
+	</div>
+</body>
+</html>

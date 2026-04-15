@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>兄弟选择器</title>
+    <style>
+        div+p{
+            /* 加号表示紧紧相邻的兄弟，而且只往下找，只找p元素，p标签 */
+            color:red;
+        }
+        div~p{
+            color:rgb(10, 132, 239);   
+        }
+        /* 选中往下找的所有兄弟p标签 */
+    </style>
+</head>
+<body>
+    <p>前端</p>
+    <div>尚硅谷</div>
+    <p>JavaScript</p>
+    <p>大数据</p>
+    <div>测试</div>
+    <p>UI</p>
+</body>
+</html>
