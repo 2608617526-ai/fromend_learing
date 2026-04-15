@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>伪类选择器</title>
+	<style>
+        /* 选中没有访问过的a元素 */
+		a:link {
+            color:green;
+        }
+        /* 选中过的，不是真正的元素选择器，而是元素特殊状态的描述
+        而且是用冒号，和类选择器比较相似
+        这种特殊状态也像类 */
+        a:visited{
+            color:gray;
+        }
+        a:hover{
+            /* 鼠标悬浮状态 */
+            color:skyblue;
+        }
+        a:active{
+            /* 选中激活状态的a元素，你鼠标点的时候会看见 也就是按住鼠标不松开*/
+            color:black;
+        }
+        /* 会有叠加态，所以顺序很重要
+        lvha 有人买了lv给我，我哈哈大笑*/
+        img:hover{
+            /* 这种称为动态伪类 */
+            transform:scale(2);
+        }
+        input{
+            background-color: green;
+        }
+        input:focus{
+            color:blue;
+            background-color: yellow;
+        }
+	</style>
+</head>
+<body>
+	<a class="no" href="https://www.baidu.com">百度</a>
+    <a href="https://www.jd.com">京东</a>
+    <img src="./培训.jpg" width="100">
+    <br>
+    <input type="text">
+    <select>
+        <option></option>
+    </select>
+</body>
+</html>
