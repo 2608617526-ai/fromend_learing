@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>结构伪类</title>
+	<style>
+		div>p:first-child{
+            /* 选中所有div的p元素，且为第一个儿子元素 */
+             /* div>p,>的意思是子代，子代的p ，且为第一个*/
+             /* 若<div></div>的第一个子标签为span，则没有标签会生效 */
+            color:red;
+        }
+        div p:first-child{
+            /* 选中div元素的后代p元素，并且p必须是某个东西的第一个儿子 */
+            color:green;
+        }
+        p:first-child{
+            /* 选中的是p元素，且p必须是某个东西的第一个儿子元素 */
+            color:yellow;
+        }
+	</style>
+</head>
+<body>
+	<div>
+        <p>测试1</p>
+        <marquee>
+            <p>测试2</p>
+        </marquee>
+        <span>张三98</span>
+        <div>
+            <p>李四95</p></div>
+        <p>王五93</p>
+        <p>赵六22</p>
+    </div>
+</body>
+</html>

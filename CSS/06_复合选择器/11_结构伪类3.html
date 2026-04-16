@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>结构伪类3</title>
+	<style>
+		div>p:nth-child(3){
+            color:red;
+        }
+        div>p:nth-of-type(1){
+            color:blue;
+        }
+        div>p:nth-last-child(2){
+            color:brown;
+        }
+        div>p:nth-last-of-type(2){
+            color:green;
+        }
+        span:only-child{
+            color:aqua;
+        }
+         /* 选中span，这个span必须是某个东西的唯一儿子 */
+        span:only-of-type{
+            font-size: xx-large;
+        }
+       :root{
+        background-color: gray;
+       }
+       /* 选中html元素，也就是根元素 */
+       div:empty{
+        background-color:orange;
+        width:100px;
+        height: 100px;
+       }
+	</style>
+</head>
+<body>
+    <div>
+        <p>测试1</p>
+        <span>测试2</span>
+    </div>
+    <div>
+        <span>测试0</span>
+    </div>
+	<div>
+        <span>0</span>
+        <p>1</p>
+        <p>2</p>
+        <p>3</p>
+        <p>4</p>
+        <p>5</p>
+        <span>结尾</span>
+    </div>
+    <div></div>
+</body>
+</html>

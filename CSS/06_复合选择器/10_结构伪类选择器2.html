@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>结构伪类2</title>
+	<style>
+		div>p:last-child{
+            color:red;
+        }
+        /* 这个确实会覆盖全部的div */
+        /* div>p,>的意思是子代p元素，必须是子代的最后一个 */
+        div>p:nth-child(2){
+            color:green;
+        }
+        .kk>p:nth-child(2n){
+            color:yellow;
+            /* odd是奇数，或者2n+1，n从零开始，even是偶数你也可以在括号里面写 */
+        }
+         .kkk>p:nth-child(-n+5){
+            /* 括号里的形式必须得是an+b的形式 */
+            color:pink;
+            /* odd是奇数，你也可以在括号里面写 */
+        }
+        .yy>p:nth-of-type(2){
+            /* 这个是选中p的同类型兄弟，而且选中第二个，那个span就不算了 */
+            color:blue;
+        }
+        
+	</style>
+</head>
+<body>
+	<div>
+        <p>1</p>
+        <p>2</p>
+        <p>3</p>
+        <p>4</p>
+        <p>5</p>
+        <p>6</p>
+        <p>7</p>
+        <p>8</p>
+    </div>
+    <div class="kk">
+        <span>0</span>
+        <p>1</p>
+        <p>2</p>
+        <p>3</p>
+        <p>4</p>
+        <p>5</p>
+        <p>6</p>
+        <p>7</p>
+        <p>8</p>
+    </div>
+    <div class="kkk">
+        <p>1</p>
+        <p>2</p>
+        <p>3</p>
+        <p>4</p>
+        <p>5</p>
+        <p>6</p>
+        <p>7</p>
+        <p>8</p>
+    </div>
+    <div class="yy">
+        <span>color</span>
+        <p>1</p>
+        <p>2</p>
+        <p>3</p>
+        <p>4</p>
+        <p>5</p>
+        <p>6</p>
+        <p>7</p>
+        <p>8</p>
+    </div>
+</body>
+</html>
