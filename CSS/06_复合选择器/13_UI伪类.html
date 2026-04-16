@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>UI伪类</title>
+	<style>
+		input:checked{
+            /* 冒号，没错就是解释说明的意思。引入状态，目标等伪类 */
+            width: 100px;
+            height: 100px;
+        }
+        input:disabled{
+            background-color: black;
+        }
+        /* 伪类选择器的优先级高于类选择器，能理解 */
+        input{
+            background-color: green;
+        }
+	</style>
+</head>
+<body>
+	<input type="checkbox">
+    <input type="radio" name="gender">
+    <input type="radio" name="gender">
+    <!-- 对于UI伪类，不是所有的东西都能调 -->
+    <input type="text" >
+    <input type="text" disabled>
+</body>
+</html>
