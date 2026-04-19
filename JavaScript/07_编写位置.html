@@ -6,14 +6,25 @@
 	<style>
 
 	</style>
+    <script type="text/javascript" src="./07_编写位置.js">
+        alert("这是内部强制弹窗");
+        // 在你的代码中，当你使用 src 属性引入外部脚本文件时，
+        // <script> 标签内部的代码不会被执行。
+        // 也就是说，一旦指定了 src 属性，
+        // 该 <script> 标签内嵌套的脚本内容会被忽略。
+    </script>
+    <script>
+        alert("我是内部的强制弹窗");
+        // 外部会先执行
+    </script>
 </head>
 <body>
 	<button onclick="alert('真无语，让你点你还真点嘛？')">点我一下</button>
-    <!-- onclick点击时才会执行 -->
+    <!-- onclick点击时才会执行，结构与行为耦合，不推荐使用。一般样式也不写在style标签里写一样 -->
     <br>
     <a href="javascript:alert('点了没事的');">让你点就点呗</a>
     <a href="javascript:;">让你点就点呗</a>
     <!-- 这样编写不适合维护，用得不多，适合紧急场景使用 -->
-     <p>可以卸载外部文件在不同页面中同时引用，这是推荐的方式</p>
+     <p>可以选择外部文件在不同页面中同时引用，这是推荐的方式</p>
 </body>
 </html>
