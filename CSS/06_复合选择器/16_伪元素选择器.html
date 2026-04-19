@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>伪元素选择器</title>
+	<style>
+		div::first-letter{
+            /* 伪元素，用两个冒号来选中 */
+            color:red;
+            font-size: x-large;
+        }
+        div::first-line{
+            /* 选中第一行元素 */
+            color:green;
+        }
+        div::selection{
+            background-color: green;
+            color:orange;
+        }
+        /* 规范地写两个冒号，selecton和placeholder都是css3的内容 */
+        input::placeholder{
+            color:blue;
+        }
+        p::before{
+            content:"￥"
+        }
+        P::after{
+            content:".00"
+        }
+	</style>
+</head>
+<body>
+	<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vitae molestias eaque officiis obcaecati consectetur! In, cumque vero. Consequuntur ab dolore cum nesciunt, numquam modi quis alias asperiores eaque cumque laudantium dolorem fugit vitae facilis distinctio tempore libero? Libero quasi a aliquid? Adipisci et omnis eum repellat ad sequi saepe, optio neque nulla repellendus blanditiis voluptatem aperiam, ipsum minus harum at.</div>
+    <!-- Lorem这个玩意可以随机生成一段文字，只在vscode里面有用 -->
+    <input type="text" placeholder="请输入您的用户名">
+    <p>1</p>
+    <p>2</p>
+    <p>3</p>
+    <p>4</p>
+</body>
+</html>

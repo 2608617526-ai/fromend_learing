@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>选择器优先级</title>
+    <style>
+        /* 行内样式>内部样式=外部样式 */
+        /* 同级别选择器同类选择器后来者居上 */
+        /* id选择器>类选择器>元素选择器>通配选择器 */
+        /* 冲突的属性，才会覆盖。不冲突，就不会覆盖
+		 */
+        .container span.slogan{
+            color:red;
+         }
+         /* (0,2,1) */
+        div>p>span:nth-child(1) {
+            color: green;
+        }
+        /* (0,1,3) */
+        /* 一位一位地去比较，2>1.权重完全相同就是后来者居上原则 */
+
+        /* 这种复杂的选择器，按权重来计算的 */
+        /*
+        权重计算： 
+        (a,b,c)
+        a:id选择器的个数
+        b：类，伪类，属性选择器的个数
+        c：元素，伪元素选择器的个数
+        */
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <p>
+            <span class="slogan">尚硅谷，让天下没有难学的技术</span>
+            <span>欢迎同学们来学习！</span>
+            宇宙最强大：!important
+        </p>
+    </div>
+</body>
+
+</html>

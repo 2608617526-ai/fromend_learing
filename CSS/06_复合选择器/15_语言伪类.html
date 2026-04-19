@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- 所有语言标签，都是默认lang为简体中文 -->
+<head>
+	<meta charset="UTF-8">
+	<title>语言伪类</title>
+	<style>
+		div:lang(en){
+            color:red;
+        }
+        /* 意思是选中所有语言为en的div元素 */
+        /* 冒号最大的作用就是引入伪类 */
+        :lang(zh-CN){
+            color:blue;
+        }
+        
+
+	</style>
+</head>
+<body>
+	<div>1</div>
+    <div lang="en">at硅谷</div>
+    <p>前端</p>
+    <span>你好</span>
+</body>
+</html>
