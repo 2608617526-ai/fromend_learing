@@ -27,7 +27,7 @@ a= Number(a);
 console.log(typeof a);
 console.log(a);
 
-// 这个方法只针对字符串，好像非字符串会先转换为字符串在转为number，但是
+// 这个方法只针对字符串，好像非字符串会先转换为字符串再转为number，但是
 a="123.22a567px"
 // 读取到第一个非数字，后面的全丢了
 a=parseInt(a);

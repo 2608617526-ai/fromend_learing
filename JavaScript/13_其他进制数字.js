@@ -10,8 +10,8 @@ let c = 0b11;
 console.log(c);
 
 //可以在parseInt()中传递第二个参数，来指定数字进制
-let d = "0o77";
-d = parseInt(d,10);
+let d = "77";
+d = parseInt(d,8);
 console.log(d);
-
+// 只要是输出的数字，必然是十进制
 

@@ -1,6 +1,6 @@
 var bool = false;
 console.log(typeof bool);
-var a = null;
+let a = null;
 console.log(typeof a);
 
 var b;
@@ -19,4 +19,8 @@ a= String(a);
 console.log(typeof a);
 // 这个方法null和undefined也可以转换
 
+let name = "孙悟空"
+let e = ` 今天天气真好啊
+            ${name} \n你想和我一起去约会吗`
 
+console.log(`b= ${name}`);
