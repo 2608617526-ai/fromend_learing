@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>探寻广州之春 | 羊城花开</title>
+    <style>
+        /* ================= 炫技点 1：CSS 变量与全站基础设定 ================= */
+        :root {
+            --kapok-red: #E63946;
+            --spring-green: #2A9D8F;
+            --mist-white: #F1FAEE;
+            --bg-dark: #1A1A2E;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--mist-white);
+            overflow-x: hidden;
+            /* 炫技点 2：自定义平滑滚动条 */
+            scrollbar-width: thin;
+            scrollbar-color: var(--kapok-red) var(--bg-dark);
+        }
+
+        body::-webkit-scrollbar {
+            width: 8px;
+        }
+        body::-webkit-scrollbar-thumb {
+            background-color: var(--kapok-red);
+            border-radius: 10px;
+        }
+
+        /* ================= 炫技点 3：Canvas 背景容器 ================= */
+        #spring-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ================= 炫技点 4：首屏全屏视差与高级文字遮罩 ================= */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            /* 径向渐变模拟清晨阳光 */
+            background: radial-gradient(circle at 50% 30%, rgba(230, 57, 70, 0.15) 0%, transparent 60%);
+        }
+
+        .title {
+            font-size: 6rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            /* 炫技点 5：CSS 动态渐变文字与动画 */
+            background: linear-gradient(45deg, var(--kapok-red), #FFB703, var(--kapok-red));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textShine 4s linear infinite;
+            filter: drop-shadow(0px 0px 20px rgba(230, 57, 70, 0.3));
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            letter-spacing: 5px;
+            opacity: 0.8;
+            font-weight: 300;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 炫技点 6：打字机光标效果 */
+        .subtitle::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: var(--kapok-red);
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes textShine {
+            to { background-position: 200% center; }
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* ================= 炫技点 7：现代 Glassmorphism (玻璃拟态) 布局 ================= */
+        .content-section {
+            padding: 100px 10vw;
+            min-height: 100vh;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            margin-bottom: 50px;
+            text-align: center;
+            color: var(--spring-green);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        /* ================= 炫技点 8：原生 CSS 3D 透视与 JS 结合的互动卡片 ================= */
+        .card {
+            position: relative;
+            height: 400px;
+            border-radius: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            cursor: pointer;
+            overflow: hidden;
+            /* 设置透视点，为 JS 的 3D 旋转做准备 */
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255,255,255,0.2);
+        }
+
+        /* 卡片内容的 3D Z轴浮出效果 */
+        .card-content {
+            transform: translateZ(50px);
+            pointer-events: none;
+        }
+
+        .card h3 {
+            font-size: 2rem;
+            color: var(--kapok-red);
+            margin-bottom: 10px;
+            text-shadow: 0 5px 10px rgba(0,0,0,0.5);
+        }
+
+        .card p {
+            font-size: 1rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        /* 炫技点 9：卡片悬浮时的动态流光边框模拟 */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.1), transparent 40%);
+            z-index: -1;
+            transition: opacity 0.3s;
+            opacity: 0;
+        }
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        /* ================= 炫技点 10：Intersection Observer 滚动揭示动画 ================= */
+        .reveal {
+            opacity: 0;
+            transform: translateY(100px) scale(0.9);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 50px;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="spring-canvas"></canvas>
+
+    <header class="hero">
+        <h1 class="title">探寻广州之春</h1>
+        <p class="subtitle" id="typewriter">羊城三月，看木棉染红天际，听珠江春潮拍岸</p>
+    </header>
+
+    <main>
+        <section class="content-section">
+            <h2 class="section-title reveal">羊城春景录</h2>
+            <div class="card-grid">
+                <div class="card reveal" data-tilt>
+                    <div class="card-content">
+                        <h3>越秀公园</h3>
+                        <p>镇海楼旁，五羊雕像下，百年木棉傲骨逢春，红艳如火，是广州人记忆中最深处的春色。</p>
+                    </div>
+                </div>
+                <div class="card reveal" data-tilt style="transition-delay: 0.1s;">
+                    <div class="card-content">
+                        <h3>荔湾湖畔</h3>
+                        <p>西关打铜声伴随春风，泮塘五秀吐露新芽。游船荡漾，品一口早茶，尽显岭南水乡的温婉。</p>
+                    </div>
+                </div>
+                <div class="card reveal" data-tilt style="transition-delay: 0.2s;">
+                    <div class="card-content">
+                        <h3>花城广场</h3>
+                        <p>中轴线上的现代之春。珠江新城的高楼与黄花风铃木交相辉映，小蛮腰在春雾中若隐若现。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Created by Gemini | 探索原生前端技术的边界</p>
+    </footer>
+
+    <script>
+        /* ================= 炫技点 11：原生 Canvas 物理引擎模拟木棉花落 ================= */
+        const canvas = document.getElementById('spring-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let petals = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Petal {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height - height;
+                this.size = Math.random() * 8 + 4;
+                this.speedY = Math.random() * 1 + 0.5;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 2 - 1;
+                // 木棉花/春花的颜色系
+                this.color = Math.random() > 0.5 ? '#E63946' : '#F4A261';
+                this.opacity = Math.random() * 0.5 + 0.3;
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.rotation += this.rotationSpeed;
+
+                // 简单的微风模拟：利用正弦函数产生摇摆
+                this.x += Math.sin(this.y / 50) * 0.5;
+
+                // 触底重置
+                if (this.y > height + this.size) {
+                    this.y = -this.size;
+                    this.x = Math.random() * width;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation * Math.PI / 180);
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                
+                // 绘制类似花瓣的形状 (利用贝塞尔曲线)
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(-this.size, this.size/2, -this.size/2, this.size, 0, this.size);
+                ctx.bezierCurveTo(this.size/2, this.size, this.size, this.size/2, 0, 0);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 60; i++) {
+            petals.push(new Petal());
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            petals.forEach(petal => {
+                petal.update();
+                petal.draw();
+            });
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+
+        /* ================= 炫技点 12：纯数学计算实现鼠标 3D 倾斜追踪 ================= */
+        const tiltCards = document.querySelectorAll('[data-tilt]');
+        
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left; // 鼠标在卡片内的 X 坐标
+                const y = e.clientY - rect.top;  // 鼠标在卡片内的 Y 坐标
+                
+                // 计算旋转角度：将鼠标坐标映射为 -15度 到 15度
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -15;
+                const rotateY = ((x - centerX) / centerX) * 15;
+
+                // 将坐标传给 CSS 变量，用于流光背景效果
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+
+                // 应用 3D 变换
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+
+            // 鼠标移出时恢复原状，添加弹性过渡
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                card.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
+            });
+
+            // 鼠标进入时移除过渡，实现实时跟随
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'none';
+            });
+        });
+
+
+        /* ================= 炫技点 13：Intersection Observer 性能级滚动动画 ================= */
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        const revealOptions = {
+            threshold: 0.15, // 元素出现 15% 时触发
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                
+                // 触发 CSS 动画类
+                entry.target.classList.add('active');
+                // 动画触发一次后取消观察，优化性能
+                observer.unobserve(entry.target);
+            });
+        }, revealOptions);
+
+        revealElements.forEach(el => revealOnScroll.observe(el));
+
+        /* ================= 炫技点 14：JS 纯手工打字机特效 ================= */
+        const typewriterEl = document.getElementById('typewriter');
+        const textToType = typewriterEl.innerText;
+        typewriterEl.innerText = '';
+        let charIndex = 0;
+
+        function typeText() {
+            if (charIndex < textToType.length) {
+                typewriterEl.innerText += textToType.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeText, 100); // 打字速度
+            }
+        }
+        // 延迟1秒开始打字，配合首屏加载
+        setTimeout(typeText, 1000);
+
+    </script>
+</body>
+</html>

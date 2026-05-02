@@ -1,1 +1,1 @@
-name.smallname
+console.log("weigth" in kk);
