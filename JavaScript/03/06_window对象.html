@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>window对象</title>
+	<style>
+
+	</style>
+	<script type="text/javascript">
+        window.alert(123);
+        window.a = 10 ;
+        console.log(window.a);
+        // 向Window对象中添加的属性会自动成为全局变量，我去
+        // var 不具有块作用域 
+        var b = 20 ;
+        // 使用var声明的变量，都会作为Window对象的属性保存
+        // 而let声明的变量，会存储在一个秘密的地方 ，编辑器会优先找let的合格秘密地方，不能被直接访问
+        {console.log(b)}
+
+        function fn(){
+            alert(`我是fn`);
+        }
+        window.fn();
+        // 引擎解析： 发现是一个函数声明，于是提升到作用域顶部。
+        // 创建绑定： 因为它是在全局作用域声明的，引擎顺手把它绑定到了全局对象（window）上。
+
+	</script>
+</head>
+<body>
+	
+</body>
+</html>
