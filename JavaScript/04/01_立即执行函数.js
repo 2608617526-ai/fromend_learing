@@ -3,3 +3,14 @@
 function fn(){
     var a = 10;
 }
+(function(){
+    let a = 10;
+    console.log(a);
+})(1); // 分号必须加,记得写分号
+// 加个括号就不会被提升，然后立即执行函数是在函数后面加个括号
+// 可以是一个匿名的函数没有名称
+
+(function(){
+    let a = 10;
+    console.log(a);
+})();
