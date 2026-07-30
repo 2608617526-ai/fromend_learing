@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>顶级电量检测 · 黑色幽默</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at 30% 10%, #0a0f1e, #03050b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', 'Orbitron', 'Courier New', monospace;
+            overflow-x: hidden;
+            position: relative;
+            touch-action: manipulation;
+        }
+
+        /* 炫酷电流闪烁科技感背景 */
+        .electric-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .bolt {
+            position: absolute;
+            background: linear-gradient(135deg, #0afff0, #ff3c7e);
+            filter: blur(8px);
+            opacity: 0;
+            animation: flicker 0.2s infinite alternate;
+            border-radius: 40%;
+            box-shadow: 0 0 20px #0afff0, 0 0 6px #ff3c7e;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.1; transform: scaleX(0.8); }
+            100% { opacity: 0.6; transform: scaleX(1.2); }
+        }
+
+        .glow-line {
+            position: absolute;
+            background: #0afff0;
+            width: 2px;
+            height: 100%;
+            left: 20%;
+            top: 0;
+            filter: blur(4px);
+            animation: pulseGlow 1.2s infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.1; box-shadow: 0 0 5px cyan; }
+            100% { opacity: 0.7; box-shadow: 0 0 20px magenta; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 480px;
+            margin: 2rem auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(2px);
+        }
+
+        .detect-btn {
+            background: rgba(0, 20, 30, 0.7);
+            backdrop-filter: blur(16px);
+            border: 2px solid #0afff0;
+            border-radius: 80px;
+            padding: 1.2rem 2.2rem;
+            font-size: 1.6rem;
+            font-weight: bold;
+            font-family: 'Orbitron', monospace;
+            color: #0afff0;
+            text-shadow: 0 0 10px #0afff0, 0 0 5px #ff3c7e;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 0 25px rgba(10, 255, 240, 0.6);
+            margin: 2rem 0;
+            width: 90%;
+            max-width: 320px;
+            text-align: center;
+        }
+
+        .detect-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 0 10px cyan;
+        }
+
+        .progress-area {
+            width: 90%;
+            max-width: 400px;
+            margin-top: 2rem;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .scan-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #eef4ff;
+            text-shadow: 0 0 5px #0afff0;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 60px;
+            letter-spacing: 1px;
+            display: inline-block;
+            white-space: nowrap;
+            font-family: monospace;
+        }
+
+        .jumping-letters span {
+            display: inline-block;
+            animation: jumpWave 0.6s infinite alternate ease-in-out;
+            animation-delay: calc(0.05s * var(--i, 0));
+        }
+
+        @keyframes jumpWave {
+            0% { transform: translateY(0px); text-shadow: 0 0 2px cyan; }
+            100% { transform: translateY(-8px); text-shadow: 0 0 12px magenta; color: #ff99cc; }
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            background: #1a1f2e;
+            border-radius: 40px;
+            padding: 4px;
+            border: 1px solid #0afff0;
+            box-shadow: 0 0 12px cyan;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 28px;
+            background: linear-gradient(90deg, #0afff0, #ff3c7e);
+            border-radius: 40px;
+            box-shadow: 0 0 10px #ff3c7e;
+            transition: width 0.08s linear;
+        }
+
+        .percentage {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #0afff0;
+            text-shadow: 0 0 8px magenta;
+            font-family: monospace;
+        }
+
+        .rude-dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ffffff;
+            border: 5px solid black;
+            box-shadow: 0 0 0 100vw rgba(0,0,0,0.5);
+            z-index: 1000;
+            width: 280px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            font-family: 'Microsoft YaHei', 'Courier New', monospace;
+            font-size: 1rem;
+            color: #000;
+            border-radius: 8px;
+            transition: 0.1s;
+        }
+
+        .rude-dialog h3 {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+            background: none;
+            color: black;
+            border-bottom: 2px solid #999;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .rude-dialog p {
+            font-size: 1.2rem;
+            margin: 1rem 0;
+            line-height: 1.4;
+        }
+
+        .rude-dialog button {
+            margin-top: 1rem;
+            padding: 6px 20px;
+            background: lightgray;
+            border: 1px solid black;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="electric-bg" id="electricBg"></div>
+
+    <div class="container">
+        <button class="detect-btn" id="detectBtn">⚡ 点击查看手机剩余电量 ⚡</button>
+
+        <div class="progress-area" id="progressArea">
+            <div class="scan-text" id="scanText"></div>
+            <div class="progress-bar-container">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="percentage" id="percentage">0%</div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- 炫酷电流背景 ----------
+            const bg = document.getElementById('electricBg');
+            function createBolts() {
+                for (let i = 0; i < 40; i++) {
+                    const bolt = document.createElement('div');
+                    bolt.classList.add('bolt');
+                    const w = Math.random() * 8 + 2;
+                    const h = Math.random() * 300 + 50;
+                    bolt.style.width = w + 'px';
+                    bolt.style.height = h + 'px';
+                    bolt.style.left = Math.random() * 100 + '%';
+                    bolt.style.top = Math.random() * 100 + '%';
+                    bolt.style.opacity = Math.random() * 0.6;
+                    bolt.style.animationDuration = Math.random() * 0.3 + 0.1 + 's';
+                    bolt.style.animationDelay = Math.random() * 2 + 's';
+                    bg.appendChild(bolt);
+                }
+                for (let i = 0; i < 15; i++) {
+                    const line = document.createElement('div');
+                    line.classList.add('glow-line');
+                    line.style.left = Math.random() * 100 + '%';
+                    line.style.width = '3px';
+                    line.style.height = '100%';
+                    line.style.animationDuration = Math.random() * 1 + 0.5 + 's';
+                    bg.appendChild(line);
+                }
+            }
+            createBolts();
+            setInterval(() => {
+                const bolts = document.querySelectorAll('.bolt');
+                bolts.forEach(b => {
+                    if (Math.random() > 0.7) {
+                        b.style.opacity = Math.random() * 0.8;
+                        const color = Math.random() > 0.5 ? '#0afff0' : '#ff3c7e';
+                        b.style.background = `linear-gradient(135deg, #0afff0, ${color})`;
+                    }
+                });
+            }, 400);
+
+            // ---------- DOM 元素 ----------
+            const detectBtn = document.getElementById('detectBtn');
+            const progressArea = document.getElementById('progressArea');
+            const progressFill = document.getElementById('progressFill');
+            const percentageSpan = document.getElementById('percentage');
+            const scanTextDiv = document.getElementById('scanText');
+
+            let isQuerying = false;
+            let animationFrame = null;
+            let currentPercent = 0;
+
+            // 文字跳跃动画
+            function applyJumpingAnimation(text) {
+                scanTextDiv.innerHTML = '';
+                const chars = text.split('');
+                chars.forEach((ch, idx) => {
+                    const span = document.createElement('span');
+                    span.textContent = ch;
+                    if (ch === ' ') span.style.marginRight = '0.25rem';
+                    span.style.setProperty('--i', idx % 10);
+                    span.style.display = 'inline-block';
+                    scanTextDiv.appendChild(span);
+                });
+                scanTextDiv.classList.add('jumping-letters');
+            }
+
+            function resetProgressAndStop() {
+                if (animationFrame) {
+                    cancelAnimationFrame(animationFrame);
+                    animationFrame = null;
+                }
+                currentPercent = 0;
+                progressFill.style.width = '0%';
+                percentageSpan.innerText = '0%';
+                isQuerying = false;
+                progressArea.style.display = 'none';
+                detectBtn.disabled = false;
+                detectBtn.style.opacity = '1';
+            }
+
+            function showResultDialog() {
+                const existingDialog = document.querySelector('.rude-dialog');
+                if (existingDialog) existingDialog.remove();
+
+                const dialog = document.createElement('div');
+                dialog.className = 'rude-dialog';
+                dialog.innerHTML = `
+                    <h3>📱 检测结果</h3>
+                    <p>🔋 您的手机有电</p>
+                    <button id="rudeCloseBtn">朕知道了</button>
+                `;
+                document.body.appendChild(dialog);
+
+                const closeBtn = document.getElementById('rudeCloseBtn');
+                closeBtn.addEventListener('click', () => {
+                    dialog.remove();
+                });
+                dialog.addEventListener('click', (e) => {
+                    if (e.target === dialog) dialog.remove();
+                });
+            }
+
+            function startDetection() {
+                if (isQuerying) return;
+                isQuerying = true;
+                detectBtn.disabled = true;
+                detectBtn.style.opacity = '0.7';
+
+                progressArea.style.display = 'flex';
+                currentPercent = 0;
+                progressFill.style.width = '0%';
+                percentageSpan.innerText = '0%';
+
+                // 修改后的文字
+                const fullText = "AI大模型正在思考中……";
+                applyJumpingAnimation(fullText);
+
+                // 进度条持续时间：7秒（原3.5秒加倍）
+                const duration = 7000; // ms
+                const startTime = performance.now();
+
+                function updateProgress(now) {
+                    const elapsed = now - startTime;
+                    let percent = Math.min(100, (elapsed / duration) * 100);
+                    currentPercent = Math.floor(percent);
+                    if (currentPercent > 100) currentPercent = 100;
+                    progressFill.style.width = currentPercent + '%';
+                    percentageSpan.innerText = currentPercent + '%';
+
+                    if (currentPercent < 100) {
+                        animationFrame = requestAnimationFrame(updateProgress);
+                    } else {
+                        if (animationFrame) cancelAnimationFrame(animationFrame);
+                        progressFill.style.width = '100%';
+                        percentageSpan.innerText = '100%';
+                        setTimeout(() => {
+                            showResultDialog();
+                            const dialogCheck = setInterval(() => {
+                                if (!document.querySelector('.rude-dialog')) {
+                                    clearInterval(dialogCheck);
+                                    resetProgressAndStop();
+                                    detectBtn.disabled = false;
+                                    detectBtn.style.opacity = '1';
+                                }
+                            }, 200);
+                        }, 80);
+                        animationFrame = null;
+                    }
+                }
+
+                animationFrame = requestAnimationFrame(updateProgress);
+            }
+
+            detectBtn.addEventListener('click', startDetection);
+            detectBtn.addEventListener('touchstart', (e) => {
+                if (isQuerying) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
