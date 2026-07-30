@@ -5,12 +5,14 @@
 	<title>否定伪类</title>
 	<style>
 		div>p:not(.fail){
+            /* 嵌套了一个子代选择器，否定选择器 */
             /* 除了fail这类之外的div的p元素 */
             color:red;
         }
         div>span:not([title^="加油！"]){
             color:blue;
         }
+        /* 如果说name属性是台下给后端看的，那么title属性就是台前给用户看的，鼠标悬停网页会自动出现title当中的内容 */
         div>p:not(:nth-last-of-type(-n+2)){
             color:green;
         }

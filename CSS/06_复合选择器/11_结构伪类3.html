@@ -13,21 +13,26 @@
         div>p:nth-last-child(2){
             color:brown;
         }
+        /*凡是带了last的，都是从后面往前数*/
         div>p:nth-last-of-type(2){
             color:green;
         }
+        /* 从后面往前数，且只算p标签 */
         span:only-child{
             color:aqua;
         }
-         /* 选中span，这个span必须是某个东西的唯一儿子 */
+         /* 选中span！！，这个span必须是某个东西的唯一儿子独生子女 */
         span:only-of-type{
             font-size: xx-large;
         }
+        /* 它可以有兄弟姐妹，但是不能有和它同类型的兄弟姐妹（整个家里只能有它一个 span，其他的可以是 p、a 等等）。 */
        :root{
+        /* 在 HTML 网页中，:root 其实就等同于 <html> 标签，整个网页的超大背景就变成了灰色 */
         background-color: gray;
        }
        /* 选中html元素，也就是根元素 */
        div:empty{
+        /* 用来寻找“肚子里空空如也”的元素 */
         background-color:orange;
         width:100px;
         height: 100px;

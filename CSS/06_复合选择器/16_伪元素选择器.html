@@ -4,7 +4,12 @@
 	<meta charset="UTF-8">
 	<title>伪元素选择器</title>
 	<style>
-		div::first-letter{
+        /* 什么叫伪元素？正常来说我们的标签叫元素，但是有些时候我们选中的是标签实体当中的一部分内容 */
+		/* 比如说p标签当中的第一行，比如说第一个字母，这种时候就要用到伪元素选择器 */
+        /* 由于不是真正的完整的元素，我们把它们叫做伪元素 */
+
+        div::first-letter{
+            
             /* 伪元素，用两个冒号来选中 */
             color:red;
             font-size: x-large;
@@ -17,16 +22,23 @@
             background-color: green;
             color:orange;
         }
-        /* 规范地写两个冒号，selecton和placeholder都是css3的内容 */
+        /* ::selection（选中文本）：当你用鼠标去划选、涂黑页面上 div 里的文字时，
+        默认的“蓝底白字”高亮会被你强行改成“绿底橘字”。这能让网站的个性化直接拉满。 */
+        /* selecton和placeholder都是css3的内容 */
         input::placeholder{
             color:blue;
         }
+        /* ::placeholder（占位符）：专门用来修改输入框（<input>）里那些起提示作用的暗淡文字。
+        在你的 HTML 里，“请输入您的用户名”这几个提示字会被染成蓝色。 */
         p::before{
             content:"￥"
         }
         P::after{
             content:".00"
         }
+        /* 这是实际开发中使用频率最高的两个伪元素。它们能在标签的内容之前或之后，凭空塞进去一些装饰性的内容。
+
+核心铁律：它们必须配合 content 属性一起使用。没有 content，伪元素就无法隐形现身。 */
 	</style>
 </head>
 <body>

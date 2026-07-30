@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>文本颜色</title>
+	<style>
+        div{
+            font-size:90px;
+        }
+        .jnu1{
+            color:red;
+        }
+        .jnu2{
+            color: rgba(255,0,0,0.66);
+        }
+        .jnu3{
+            color:#01f5ff;
+            /* 红绿蓝，每个颜色十六机制从0到64占两位 */
+        }
+        .jnu4{
+            color:#00f8;
+            /* 这里是0000ff88的简写 */
+        }
+        .jnu5{
+            color:hsl(0,100%,50%);
+        }
+        .jnu6{
+            color:hsla(0,100%,50%,0.5);
+        }
+	</style>
+	<script type="text/javascript">
+
+	</script>
+</head>
+<body>
+    <!-- 对了，div和span的区别在于：
+    <div> 是块级元素（Block），<span> 是行内元素（Inline）。
+        span可以在一行内和其他元素共存，而div只能独占一行 -->
+	<div class="jnu1">暨南大学</div>
+    <div class="jnu2">暨南大学</div>
+    <div class="jnu3">暨南大学</div>
+    <div class="jnu4">暨南大学</div>
+    <div class="jnu5">暨南大学</div>
+    <div class="jnu6">暨南大学</div>
+</body>
+</html>
