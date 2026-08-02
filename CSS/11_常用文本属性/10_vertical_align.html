@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>还是垂直对齐</title>
+	<style>
+        div{
+            font-size: 100px;
+            height: 300px;
+            line-height: 100px;
+            background-color: skyblue;
+        }
+        span {
+            background-color: yellow;
+            font-size:40px;
+            /* 这里直接继承了div的行高,span的高度也是 */
+            vertical-align: top;
+            /* 用来控制元素在其所在那行的垂直方向上的对齐方式 */
+            /* 首先vertical-align是垂直对齐的意思，只对行内元素生效，对div无效 */
+            /* 默认是baseline */
+
+        }
+        img{
+            height: 150px;
+            vertical-align: middle;
+            /* 如果你高度一行的高度是由这行最高的元素决定的，
+            你这里要是把图片的行高写得比文字还高，文字也会跟着调整，看起来就是感觉文字在动 */
+        }
+        /* 冷知识，鼠标选中区域并不等于行高，只和文字字体和font-size有关 */
+	</style>
+	<script type="text/javascript">
+
+	</script>
+</head>
+<body>
+	<div>
+        <span>暨南大学x</span>x是世界上最好的大学。
+    </div>
+    <hr>
+    <div>
+        我的自拍x<img src="./大古.jpg">
+        <!-- 默认也是基线对齐的,基线就是x下部对齐的线 -->
+    </div>
+    
+
+</body>
+</html>

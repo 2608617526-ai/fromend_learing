@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>细说行高</title>
+	<style>
+         /* 行高的应用场景:调整多行文字的间距 */
+        #jnu1{
+            font-size:40px;
+            background-color: skyblue;
+            line-height:60px;
+            /* 如果行高是0，那么背景色会消失，这是因为背景色是靠内部的 line-height 撑开的，背景色没有地方可以显示 */
+            /* 其实行高你写60px和1.5是有区别的 */
+            /* 如果你写line-height为-1，浏览器会直接把这个无效的值换成normal */
+        }
+        #jnu2{
+            font-size:40px;
+            background-color: orange;
+            line-height:1.5;
+        }
+        span{
+            font-size:200px;
+            color:red;
+            line-height:1.5;
+        }
+        /* 行高是可以继承的，这个子代选择器会直接继承jnu2这个元素的行高，如果行高不该的话会产生遮挡 */
+        /* 所以你需要调整，行高取决于一行里面最高的元素 */
+        #jnu3{
+            font-size: 40px;
+            background-color:yellowgreen;
+            line-height:100px;
+            height: 300px;
+            /* 这个height是整个div这个元素的高度 */
+            /* 没有设置height，高度height就是line-height乘以行数 */
+        }
+
+        #jnu5{
+            /* 行高可应用于单行文字的居中 */
+            font-size: 40px;
+            background-color:skyblue;
+            line-height:300px;
+            height: 300px;
+        }
+	</style>
+	<script type="text/javascript">
+
+	</script>
+</head>
+<body>
+	<div id="jnu1">暨南大学是世界上最好的大学。暨南大学是世界上最好的大学。暨南大学是世界上最好的大学。暨南大学是世界上最好的大学。暨南大学是世界上最好的大学。暨南大学是世界上最好的大学。暨南大学是世界上最好的大学。暨南大学是世界上最好的大学。暨南大学是世界上最好的大学。暨南大学是世界上最好的大学。暨南大学是世界上最好的大学。</div>
+    <div id="jnu2">暨南大学是世界上最好的大学。暨南大学是世界上最好的大学。<span>暨南大学</span>是世界上最好的大学。暨南大学是世界上最好的大学。暨南大学是世界上最好的大学。暨南大学是世界上最好的大学。暨南大学是世界上最好的大学。暨南大学是世界上最好的大学。暨南大学是世界上最好的大学。暨南大学是世界上最好的大学。暨南大学是世界上最好的大学。</div>
+    <div id ="jnu3">暨南大学是世界上最好的大学。</div>
+
+    <!-- 为什么背景色充满了整个div的高度呢,这是由css的盒模型决定的，还没有学到
+     没写 height 时：line-height 是撑开盒子的幕后功臣。
+
+写了 height 时：height 强行接管战场，决定盒子的总大小和背景色范围，
+而 line-height 退居二线，只负责控制文字在盒子内部的行间距和垂直对齐方式。 -->
+    <div id="jnu5">暨南大学是世界上最好的大学。</div>
+
+</body>
+</html>

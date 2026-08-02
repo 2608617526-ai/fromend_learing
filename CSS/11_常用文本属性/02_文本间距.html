@@ -7,6 +7,15 @@
         div{
             font-size:30px;
         }
+        .jnu1{
+            letter-spacing:20px;
+            /* 字母之间的间隔，其实是字符间距甚至空格字符，也包括汉字 */
+        }
+        .jnu2{
+            word-spacing:20px;
+            /* 单词间距，其实是通过空格来识别的，所以你可以通过给中文加空格来实现，
+            但是一般也不用这个，你也可以视为对中文不起作用了*/
+        }
 	</style>
 	<script type="text/javascript">
 
@@ -14,5 +23,8 @@
 </head>
 <body>
     <div>You got a dream,you gotta protect it.</div>
+    <div class="jnu1">You got a dream,you gotta protect it.暨南大学</div>
+    <div class="jnu2">You got a dream,you gotta protect it.暨 南 大学</div>
+    <div class="jnu3">You got a dream,you gotta protect it.暨南大学</div>
 </body>
 </html>

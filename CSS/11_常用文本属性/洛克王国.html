@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>洛克王国极简PVP对战</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
+        #game-container { width: 100%; max-width: 600px; background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 15px; box-sizing: border-box; }
+        .screen { display: none; }
+        .active { display: block; }
+        
+        /* 战场面板布局 */
+        .battle-arena { display: flex; justify-content: space-between; margin-bottom: 15px; background: #eef2f3; padding: 10px; border-radius: 6px; }
+        .player-panel { width: 45%; }
+        .hp-bar { width: 100%; height: 15px; background: #ddd; border-radius: 10px; overflow: hidden; margin-top: 5px; }
+        .hp-inner { height: 100%; background: #4caf50; width: 100%; transition: width 0.3s; }
+        
+        /* 战报日志区域 */
+        #log-area { height: 150px; border: 1px solid #ccc; border-radius: 4px; padding: 8px; overflow-y: auto; background: #fafafa; font-size: 14px; margin-bottom: 15px; }
+        
+        /* 控制按钮区域（自适应手机和电脑） */
+        .control-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        button { padding: 12px; font-size: 16px; border: none; background: #007bff; color: white; border-radius: 6px; cursor: pointer; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .btn-change { background: #28a745; }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div id="init-screen" class="screen active">
+        <h3>欢迎来到洛克王国极简对战</h3>
+        <p id="init-status">正在等待另一位玩家加入...</p>
+        <div id="select-pets-zone" style="display: none;">
+            <h4>请选择你的首发宠物：</h4>
+            <button onclick="selectFirst('烈火战神')">烈火战神 (火)</button>
+            <button onclick="selectFirst('圣水守护')">圣水守护 (水)</button>
+            <button onclick="selectFirst('武斗酷猫')">武斗酷猫 (草)</button>
+        </div>
+    </div>
+
+    <div id="battle-screen" class="screen">
+        <div class="battle-arena">
+            <div class="player-panel">
+                <strong>我方: <span id="my-pet-name">-</span></strong>
+                <div class="hp-bar"><div id="my-hp" class="hp-inner"></div></div>
+                <small>HP: <span id="my-hp-text">100/100</span></small>
+            </div>
+            <div class="player-panel" style="text-align: right;">
+                <strong>敌方: <span id="opp-pet-name">-</span></strong>
+                <div class="hp-bar"><div id="opp-hp" class="hp-inner" style="float: right;"></div></div>
+                <small>HP: <span id="opp-hp-text">100/100</span></small>
+            </div>
+        </div>
+
+        <div id="log-area"></div>
+
+        <div class="control-grid" id="action-pad">
+            <button id="skill-0" onclick="castSkill(0)">技能1</button>
+            <button id="skill-1" onclick="castSkill(1)">技能2</button>
+            <button id="skill-2" onclick="castSkill(2)">技能3</button>
+            <button id="skill-3" onclick="castSkill(3)">技能4</button>
+            <button class="btn-change" onclick="changePetPrompt()">更换宠物</button>
+        </div>
+    </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+    
+    // 基础连接测试
+    socket.on('connect', () => {
+    });
+
+    socket.on('game_start', (msg) => {
+        document.getElementById('init-status').innerText = msg;
+        document.getElementById('select-pets-zone').style.display = 'block';
+    });
+
+    function selectFirst(petName) {
+        console.log('选择了首发宠物:', petName);
+        // TODO: 向后端发送选择首发的事件
+    }
+</script>
+</body>
+</html>
