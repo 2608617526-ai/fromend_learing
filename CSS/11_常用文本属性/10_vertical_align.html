@@ -26,6 +26,10 @@
             /* 如果你高度一行的高度是由这行最高的元素决定的，
             你这里要是把图片的行高写得比文字还高，文字也会跟着调整，看起来就是感觉文字在动 */
         }
+        .kk{
+            vertical-align: bottom;
+            /* 这个属性直接用在div上是不行的，但是你可以用在单元格上,效果和在标签里面写valign一样 ，但是现在在标签里面写的写法不好已经被淘汰了，还是得在css里面写*/
+        }
         /* 冷知识，鼠标选中区域并不等于行高，只和文字字体和font-size有关 */
 	</style>
 	<script type="text/javascript">
@@ -41,7 +45,22 @@
         我的自拍x<img src="./大古.jpg">
         <!-- 默认也是基线对齐的,基线就是x下部对齐的线 -->
     </div>
-    
+    <hr>
+    <table border="1" cellspacing="1">
+    <cation>日程安排</cation>
+<thead>
+    <tr>
+    <th>8.1</th>
+        <th>8.2</th>
+    </tr>
+    </thead>  
+    <tbody>
+    <tr height="100">
+        <td valign="top">吃饭</td>
+        <td class="kk">睡觉</td>
+        </tr>
+    </tbody>
+</table>
 
 </body>
 </html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN" >
+    
+<head>
+	<meta charset="UTF-8">
+	<title>长度单位</title>
+	<style>
+        /* 第一种长度单位：px，像素 */
+        #d1{
+            background-color: skyblue;
+            width: 200px;
+            font-size: 20px;
+            height: 200px;
+        }
+        /* 第二种长度单位：em，相对于当前元素font-size的倍数 */
+        #d2{
+            background-color: red;
+            width: 10em;
+            height: 10em;
+            font-size: 20px;
+            /* 如果没写font-size,就会一直网上找，找body，找html的font-size，
+            如果找不到就找默认的font-size */
+        }
+        #d3{
+            /* 第三种长度单位，rem（相对于根元素，即是html的font-size） */
+            background-color: green;
+            width: 10rem;
+            height: 10rem;
+            font-size: 20px;
+            
+        }
+        html{
+            font-size: 100px;
+            /* html的font-size默认值是16，font-size并不是html的属性 */
+        }
+        /* 诶诶，看来css里面，也有提升，对html的样式代码优先级会提升 */
+        #d4{
+            /* 第四种，百分号，相对于其父元素的百分比 */
+            font-size:50%;
+            width:50%;
+        }
+	</style>
+	<script type="text/javascript">
+
+	</script>
+</head>
+<body>
+	<div id="d1">1</div>
+    <div id="d2">2</div>
+    <div id="d3">3</div>
+    <hr>
+    <div id="d4">4</div>
+</body>
+</html>

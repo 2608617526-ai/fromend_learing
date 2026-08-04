@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>表格独有属性</title>
+	<style>
+        table{
+            border: 2px black solid;
+            width: 500px;
+            
+            table-layout: fixed;
+            /* 控制表格列宽 */
+            /* 默认是自动 */
+
+            border-spacing: 10px;
+            /* 控制单元格间距： 
+            生效的前提是不能合并边框*/
+
+            border-collapse: collapse;
+            /* 默认是separate，你试试，简单说就是边框会不会叠在一起合并
+            控制是否合并相邻单元格的边框。既然已经合并了，单元格的间距就无效了 */
+
+            empty-cells:hide;
+            /* 隐藏没有内容的单元格 */
+
+            caption-side: bottom;
+            /* 设置表格标题的位置 */
+        }
+        td,th{
+            border: green 2px double;
+        }
+        .number{
+            width: 10px;
+        }
+	</style>
+	<script type="text/javascript">
+
+	</script>
+</head>
+<body>
+	<!-- 只能通过html进行跨行和跨列 -->
+     <table>
+        <caption>
+            人员信息
+        </caption>
+        <thead>
+            <tr>
+                <th calss="number">序号</th>
+                <th>姓名</th>
+                <th>年龄</th>
+                <th>性别</th>
+                <th>政治面貌</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>kk</td>
+                <td>21</td>
+                <td>男</td>
+                <td>党员</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>kkk</td>
+                <td>21</td>
+                <td>男</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>kkkk</td>
+                <td>21</td>
+                <td>女</td>
+                <td>群众</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

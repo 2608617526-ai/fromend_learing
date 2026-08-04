@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>修改元素的显示模式</title>
+	<style>
+        div{
+            font-size:20px;
+            width: 200px;
+            height: 200px;
+            display: inline-block;
+            /* none,inlie,inline-block,block一共四种样式 
+            只是显示模式变了而已，如果爬墙什么的，爬墙不会因为div的显示模式被改成行内元素就改变div始终是块级元素的这个事实 */
+            /* inline和inline-block的区别在于，inline的尺寸由内容撑开，inline-block则可以单独设置尺寸 */
+            /* 这里就可以修改，你会看到块级元素一字排开不独占一行了 */
+
+        }
+        #d1{
+            background-color: skyblue;
+        }
+        #d2{
+            background-color: red;
+        }
+        #d3{
+            background-color: green;
+        }
+        a{
+            width: 200px;
+            height: 200px;
+            display: block;
+        }
+        /* 如果说你把这个a标签，行内元素，变成块级元素，那么你就可以为它单独设置长宽高 */
+        #s1{
+            background-color: black;
+        }
+	</style>
+	<script type="text/javascript">
+
+	</script>
+</head>
+<body>
+	<div id="d1">1</div>
+    <div id="d2">2</div>
+    <div id="d3">3</div>
+    <hr>
+    <a id="s1" href="https://www.baidu.com">去百度</a>
+    <a id="s2" href="https://www.baidu.com">去千度</a>
+    <a id="s3" href="https://www.baidu.com">去万度</a>
+</body>
+</html>

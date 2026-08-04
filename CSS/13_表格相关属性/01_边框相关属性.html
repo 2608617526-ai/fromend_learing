@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>边框</title>
+	<style>
+        table{
+            border-style: solid;
+            /* double双实线 */
+            border-color: green;
+            border-width: 2px; 
+            border:2px green solid;
+        }
+        td,th{
+            /* 并集选择器 */
+            border:2px orange double;
+        }
+        h2{
+            border:2px orange dashed;
+        }
+	</style>
+	<script type="text/javascript">
+
+	</script>
+</head>
+<body>
+    <h2>边框相关属性，不仅表格，其他元素也能用，比如说这个h2</h2>
+	<table>
+        <caption>
+            人员信息
+        </caption>
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>姓名</th>
+                <th>年龄</th>
+                <th>性别</th>
+                <th>政治面貌</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>kk</td>
+                <td>21</td>
+                <td>男</td>
+                <td>党员</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>kkk</td>
+                <td>21</td>
+                <td>男</td>
+                <td>党员</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>kkkk</td>
+                <td>21</td>
+                <td>女</td>
+                <td>群众</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
