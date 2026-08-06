@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>margin塌陷问题</title>
+	<style>
+        .outer{
+            width:400px;
+            height:400px;
+            background-color: gray;
+             /* 解决方法1：给这个父元素加一个边框
+            解决方法2：给父元素加一个padding */
+            /* padding:1px transparent; */
+            /* 解决方法三（推荐）： */
+            overflow: hidden;
+            
+        }
+        .inner1{
+            
+            width: 100px;
+            height: 100px;
+            background-color: orange;
+            /* margin-bottom: 50px; */
+            margin-top: 50px;
+            /* 这行代码是有问题的 ，当你给小盒子写margin-top并希望小盒子能够在大盒子里面往下挪动一点的时候，你会发现小盒子根本没有动，
+            而是穿透了父盒子，直接把父盒子往下整体拖拽了50px*/
+           
+        }
+        .inner2{
+            /* margin-top: 50px; */
+            width: 100px;
+            height: 100px;
+            background-color: green;
+        }
+	</style>
+	<script type="text/javascript">
+
+	</script>
+</head>
+<body>
+	<div class="outer">
+        <div class="inner1">inner1</div>
+        <div class="inner2">inner2</div>
+        
+    </div>
+    <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>margin合并问题</title>
+	<style>
+        .box{
+            width: 200px;
+            height: 200px;
+        }
+        .box1{
+            background-color: deepskyblue;
+            margin-bottom: 50px;
+
+        }
+        .box2{
+            background-color: purple;
+            margin-top: 60px;
+        }
+        /* 当你在相邻的兄弟元素设置上边距和下边距的时候，你会神奇地发现他们会融合在一起，合并起来
+    而合并的规则是，两个都是正数，取最大值，一正一负，直接相加抵消，（反正结果都是下面那个元素被往上拽）负负相遇，直接取绝对值最大的负数 */
+	</style>
+	<script type="text/javascript">
+
+	</script>
+</head>
+<body>
+    <div class="box box1"></div>
+    <div class="box box2"></div>
+</body>
+</html>

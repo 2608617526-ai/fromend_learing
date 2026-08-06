@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>内容溢出</title>
+	<style>
+        #d1{
+            background-color: skyblue;
+            width: 400px;
+            height: 200px;
+            overflow: visible；
+            /* visible,直接不管，hidden,直接截断，scroll强制滚动条，auto，只能滚动条，有溢出才会出现这个滚动条 */
+        }
+        #d2{
+            background-color: orange;
+            width: 1000px;
+        }
+        /* 由于你把宽度写死了，这个d2的宽度直接超过了父元素的值。
+        有几种解决方法，1，在父元素加overflow属性 */
+	</style>
+	<script type="text/javascript">
+
+	</script>
+</head>
+<body>
+	<div id="d1">暨南大学是世界上最好的大学，我爱暨南大学.
+        <div id="d2">暨南大学是世界上最好的大学，我爱暨南大学.暨南大学是世界上最好的大学，我爱暨南大学.暨南大学是世界上最好的大学，我爱暨南大学.暨南大学是世界上最好的大学，我爱暨南大学.暨南大学是世界上最好的大学，我爱暨南大学.暨南大学是世界上最好的大学，我爱暨南大学.暨南大学是世界上最好的大学，我爱暨南大学.</div>
+        暨南大学是世界上最好的大学，我爱暨南大学.暨南大学是世界上最好的大学，我爱暨南大学.暨南大学是世界上最好的大学，我爱暨南大学.暨南大学是世界上最好的大学，我爱暨南大学.暨南大学是世界上最好的大学，我爱暨南大学.</div>
+</body>
+</html>
