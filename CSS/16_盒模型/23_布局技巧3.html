@@ -9,15 +9,22 @@
             height: 400px;
             background-color: gray;
             text-align: center;
+            line-height: 400px;
+            font-size:0px;
         }
         span{
-            width: 200px;
-            height: 100px;
+            vertical-align: middle;
             background-color: orange;
+            font-size:  40px;
         }
         img{
             width: 100px;
             height: 150px;
+            vertical-align: middle;
+            /* middle是中线对齐 */
+            /* vertical-align是让行内元素和行内块元素的对齐方式，
+            它是专门用来微调“同一行里的文字和图片”怎么对齐的。*/
+            
         }
 	</style>
 	<script type="text/javascript">
@@ -26,7 +33,7 @@
 </head>
 <body>
 	<div class="outer">
-        <span>出来玩啊？</span><img src="./大古.jpg">
+        <span>出来玩啊？x</span><img src="./大古.jpg">
     </div>
 </body>
 </html>

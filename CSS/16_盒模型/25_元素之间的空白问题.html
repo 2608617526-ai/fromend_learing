@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>元素之间的空白问题</title>
+	<style>
+        div{
+            height: 500px;
+            background-color: gray;
+            /* 方法二，在父元素里面把字号设置成零，子盒子再恢复正常大小 */
+        }
+        .s1{
+            background-color: skyblue;
+        }
+        .s2{
+            background-color: skyblue;
+        }
+        .s3{
+            background-color: skyblue;
+        }
+
+	</style>
+	<script type="text/javascript">
+
+	</script>
+</head>
+<body>
+	<div>
+        <span class="s1">人之初</span>
+        <span class="s2">性本善</span>
+        <span class="s3">性相近</span>
+        <!-- 由于在浏览器会把回车键解析成字符，所以会有空白，最简单粗暴的办法是直接在代码上并排 -->
+        
+        
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>幽灵空白</title>
+	<style>
+        img{
+            vertical-align: top;
+            /* 为什么我在img上面加了vertical-align:top以后，文字反而跑到上面去了呢？  */
+            /* 这是因为默认规则是基线对齐。你可以把基线想象成一块“地板”。
+            你命令这块 200px 的图片：“别踩地板了，给我挂到天花板上去（对齐行框顶部）！” 
+            于是图片脱离了基线，死死贴住了 div 的最上沿。
+            文字 x 身上依然带着默认的 vertical-align: baseline（它还得踩着基线）。因为基线被抽到了最上面，
+            文字 x 也就跟着基线一起，被带到了 div 的最顶端！ */
+
+            /* 嫌麻烦直接改成bottom就行了 */
+            width: 100px;
+            height: 200px;
+        }
+        div{
+            
+            background-color: skyblue;
+            /* div的背景是由img撑开的，图片底端为啥要和div元素的基线对齐呢 */
+        }
+	</style>
+	<script type="text/javascript">
+
+	</script>
+</head>
+<body>
+	<div>x<img src="./大古.jpg"></div>
+</body>
+</html>
