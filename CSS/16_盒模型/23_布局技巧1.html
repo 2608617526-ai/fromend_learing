@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>布局技巧</title>
+	<style>
+        .outer{
+            background-color: gray;
+            width: 400px;
+            height: 400px;
+            overflow: hidden;
+            
+        }
+        .inner{
+            background-color: orange;
+            width: 200px;
+            height: 100px;
+            margin: auto;
+            margin-top: 130px;
+            line-height: 100px;
+            text-align: center;
+            padding-top:20px;
+            padding-bottom: 20px;
+            /* text-align只对行内元素生效 */
+            
+            /* 这150px会引发塌陷问题，别忘了overflow(决定溢出了会咋样) */
+            /* 如何算出150px的？父元素内容区400px，减去子元素高度100除以二
+            如果说你要加上border和padding的话，那当然也要加上他们的高度 */
+        }
+	</style>
+	<script type="text/javascript">
+
+	</script>
+</head>
+<body>
+	<div class="outer">
+        <div class="inner">innerinnerinnerinnerinner
+            <br>innerinnerinnerinnerinnerinner</div>
+    </div>
+</body>
+</html>
